@@ -30,21 +30,28 @@ export type CartItemStackPrams = {
   };
 };
 
-export type ExploreStackParams = {
-  Homes: undefined;
-  Details: undefined;
-  Cart: undefined;
-  Restaurant: {
+export type AuthStackPrams = {
+  Splash: undefined;
+  SigninSingup: undefined;
+  Signin: undefined;
+  Signup: {
     name: string;
   };
 };
 
-// export type HeaderParams = {
-//   HeaderBar: undefined;
-//   SearchBar: undefined;
-//   text: undefined;
-//   // activeTab: undefined;
-//   // setActiveTab: undefined;
-// };
+export type ProfileStackPrams = {
+  Profile: undefined;
+  ProfileStack: undefined;
+  Signup: undefined;
+};
+
+export type ExploreStackParams = {
+  Homes: undefined;
+  Details: undefined;
+  AddCart: undefined;
+  Restaurant: {
+    name: string;
+  };
+};
 
 export const RootStack = createBottomTabNavigator<RootStackParams>();

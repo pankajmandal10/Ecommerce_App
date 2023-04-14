@@ -46,7 +46,7 @@ const StackNavigation = (props: StackNavigationProps) => {
             component={SingUp}
           />
           <Stack.Screen
-            name="Home"
+            name="Main"
             options={{headerShown: false}}
             component={MainScreen}
           />
@@ -58,7 +58,7 @@ const StackNavigation = (props: StackNavigationProps) => {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
-            name="Home"
+            name="Main"
             options={{headerShown: false}}
             component={MainScreen}
           />

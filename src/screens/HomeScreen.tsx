@@ -1,8 +1,7 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import Colors from '../theme/Colors';
-import {ScrollView} from 'react-native-gesture-handler';
 import {RootStackParams} from '../route/Routing';
 import SearchBar from '../components/SearchBar';
 import HeaderTabs from '../components/HeaderTabs';
@@ -13,6 +12,19 @@ import ItenList from '../components/ItemList';
 // type Props = NativeStackScreenProps<RootStackParams, 'Home'>;
 
 const HomeScreen = ({navigation}: any) => {
+  const renderItem = ({item}) => (
+    <View
+      style={{
+        backgroundColor: 'white',
+        borderRadius: 5,
+        height: 250,
+        padding: 50,
+        marginLeft: 25,
+        marginRight: 25,
+      }}>
+      <Text style={{fontSize: 30}}>{item.title}</Text>
+    </View>
+  );
   return (
     <View>
       <View
@@ -24,61 +36,13 @@ const HomeScreen = ({navigation}: any) => {
         <HeaderTabs />
         <SearchBar />
       </View>
-
-      <ScrollView style={{marginBottom: 120}}>
+      <ScrollView style={{marginBottom: 120, zIndex: -1}}>
         <HomeMainCard />
-        <Categories />
+        <View>
+          <Categories />
+        </View>
         <ItenList navigation={navigation} />
       </ScrollView>
-      {/* <Counter /> */}
-      {/* <View style={styles.container}>
-        <ScrollView>
-          <Text style={styles.screenTitle}>Restaurants gugu</Text>
-          <View>
-            <Text style={styles.sectionTitle}>Restaurants Near You</Text>
-            <RestaurantCard
-              name="Sushi restaurant"
-              onPress={() => {
-                navigation.push('Restaurant', {name: 'Sushi restaurant'});
-                // navigation.navigate('RestaurantsStack', {
-                //   screen: 'Restaurant hai',
-                //   params: {name: 'Hello from explore'},
-                // });
-              }}
-            />
-            <RestaurantCard
-              name="Burger restaurant"
-              onPress={() => {
-                navigation.push('Restaurant', {
-                  // screen: 'Restaurant hai',
-                  name: 'Burger restaurant',
-                });
-              }}
-            />
-            <RestaurantCard
-              name="Fine dining restaurant"
-              onPress={() => {
-                navigation.push('Restaurant', {name: 'Fine dining restaurant'});
-              }}
-            />
-
-            <Text style={styles.sectionTitle}>Most Popular Restaurants</Text>
-            <RestaurantCard
-              name="Sushi restaurant"
-              onPress={() => {
-                navigation.push('Restaurant', {name: 'Sushi restaurant'});
-              }}
-            />
-            <RestaurantCard
-              name="Burger restaurant"
-              onPress={() => {
-                navigation.push('Restaurant', {name: 'Burger restaurant'});
-              }}
-            />
-          </View>
-          <Menu />
-        </ScrollView>
-      </View> */}
     </View>
   );
 };

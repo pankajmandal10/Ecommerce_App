@@ -1,12 +1,19 @@
 import React, {useState} from 'react';
-import {Text, View, StyleSheet, Image, TextInput} from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 import Button from '../../components/common/Button';
 import Colors from '../../theme/Colors';
-import {vw, vh} from 'react-native-css-vh-vw';
-import {useAppDispatch} from '../../hokes';
-import {signUpPost} from '../../store/redux/UserSlice';
-import {number} from 'prop-types';
+import {useAppDispatch, useAppSelector} from '../../hokes';
+import {STATUSES, signUpPost} from '../../store/redux/UserSlice';
+import {vh, vw} from 'react-native-expo-viewport-units';
+import CustomeLoading from '../../components/common/CustomeLoading';
 
 interface SignUpProps {
   navigation: any;
@@ -19,7 +26,30 @@ const SignUp = (props: SignUpProps) => {
   const [password, setPassword] = useState('');
   const [address, setAddress] = useState('');
 
+  // Retrieve the callback function name on the SignIn screen
+  const callbackName = props.navigation?.callback;
+
+  // Convert the callback function name to a function object and call it
+  if (callbackName) {
+    const callback = eval(callbackName);
+    callback();
+  }
+
   const dispatch = useAppDispatch();
+  const {user: user, status}: any = useAppSelector(state => state.user);
+
+  if (status === STATUSES.LOADING) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignContent: 'center',
+          alignSelf: 'center',
+        }}>
+        <CustomeLoading />
+      </View>
+    );
+  }
   const handleToSignUp = async () => {
     if (
       name != '' ||
@@ -35,8 +65,8 @@ const SignUp = (props: SignUpProps) => {
         password: password,
         address: address,
       };
-      dispatch(signUpPost(userData))
-        .then(async response => {
+      await dispatch(signUpPost(userData))
+        .then(response => {
           if (response.payload.error) {
             alert(response.payload.error);
           } else {
@@ -93,6 +123,7 @@ const SignUp = (props: SignUpProps) => {
             onChangeText={phone => {
               setPhone(phone);
             }}
+            maxLength={10}
             value={phone}
             placeholder="Enter Phone..."
             keyboardType="number-pad"
@@ -128,16 +159,25 @@ const SignUp = (props: SignUpProps) => {
               flexWrap: 'wrap',
               paddingHorizontal: 25,
             }}>
-            <Button
-              onPress={handleToSignUp}
-              title="Sign Up"
-              style={styles.buttonSignUP}
-            />
-            <Button
-              onPress={() => props.navigation.navigate('SignIn')}
-              title="Sign In"
-              style={styles.buttonSignIn}
-            />
+            <TouchableOpacity
+              style={{
+                ...styles.touchableButton,
+                backgroundColor: Colors.WHITE,
+              }}
+              onPress={() => handleToSignUp()}>
+              <Text
+                style={{
+                  ...styles.touchbleTextStyle,
+                  color: Colors.BLACK,
+                }}>
+                Sign Up
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.touchableButton}
+              onPress={() => props.navigation.navigate('SignIn')}>
+              <Text style={styles.touchbleTextStyle}>Sign In</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>
@@ -203,8 +243,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     marginVertical: 10,
-    // marginHorizontal: 35,
     borderColor: 'red',
     backgroundColor: Colors.WHITE,
+  },
+  touchableButton: {
+    width: vw(40),
+    borderRadius: 30,
+    alignItems: 'center',
+    borderColor: Colors.WHITE,
+    borderWidth: 2,
+    padding: 10,
+    marginVertical: 10,
+  },
+  touchbleTextStyle: {
+    color: Colors.WHITE,
+    fontSize: 18,
+    fontWeight: '800',
   },
 });

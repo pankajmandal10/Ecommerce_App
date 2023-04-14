@@ -45,7 +45,7 @@ const ProfileScreen = (props: ProfileScreenProps) => {
 
   const handleSignOut = async () => {
     await AsyncStorage.removeItem('loginCredentials');
-    props.navigation.dispatch(StackActions.replace('Home'));
+    props.navigation.dispatch(StackActions.replace('Main'));
   };
   return (
     <>

@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Text,
   View,
@@ -13,12 +13,14 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {vw, vh} from 'react-native-css-vh-vw';
 import {useAppDispatch, useAppSelector} from '../hokes';
-import {any} from 'prop-types';
+import {any, number} from 'prop-types';
 import {add} from '../store/redux/CartSlice';
 import {ToasterHelper} from 'react-native-customizable-toast';
 import Toast from './common/toast';
 import {ToastType} from './common/toast/common';
 import Button from './button';
+import {addToCartPost} from '../store/redux/addCartSlice';
+import {getAsyncItem} from '../services';
 
 interface AddProductProps {
   navigation: any;
@@ -33,6 +35,7 @@ const AddProduct = (props: AddProductProps): JSX.Element => {
   const [showTopToast, setShowTopToast] = useState(false);
   const [showBottomToast, setShowBottomToast] = useState(false);
   const [showButtonType, setshowButtonType] = useState(false);
+  const [userId, setUserId] = useState('');
 
   const {product: product, status}: any = useAppSelector(state => state.cart);
   const dispatch = useAppDispatch();
@@ -40,8 +43,17 @@ const AddProduct = (props: AddProductProps): JSX.Element => {
   const windowHeight = Dimensions.get('window').height;
   const popAnim = useRef(new Animated.Value(windowHeight * -1)).current;
 
+  const init = async () => {
+    const userId = await getAsyncItem('userId');
+    setUserId(userId);
+  };
+
+  useEffect(() => {
+    init();
+  }, []);
+
   const handleAdd = (product: any) => {
-    props.navigation.navigate('Cart');
+    props.navigation.navigate('My Cart');
   };
 
   const onPressshowTopToast = (): void => {
@@ -49,11 +61,13 @@ const AddProduct = (props: AddProductProps): JSX.Element => {
   };
 
   const onPressShowBottomToast = (): void => {
+    // console.warn('product, userId', product, userId);
+    const data = {product: product, userId: userId};
     setShowBottomToast(true);
     setshowButtonType(true);
     setCart(!cart);
     setCountercart(1);
-    dispatch(add(product));
+    dispatch(addToCartPost(data));
     setTimeout(() => {
       setShowBottomToast(false);
     }, 3000);
@@ -75,12 +89,6 @@ const AddProduct = (props: AddProductProps): JSX.Element => {
           type={ToastType.Bottom}
           message="Product Added to Cart."
         />
-        {/* <Button title="Show Button" onPress={onPressShowBottomToast}></Button> */}
-        {/* <Button
-          onPress={onPressShowBottomToast}
-          label={renderBottomButtonLabel()}
-          customStyle={styles.button1}
-        /> */}
       </View>
       <View style={styles.container}>
         <TouchableOpacity
@@ -122,7 +130,6 @@ const AddProduct = (props: AddProductProps): JSX.Element => {
           }}
           style={{
             flexDirection: 'row',
-            // height: '50%',
             marginTop: 5,
             alignSelf: 'center',
           }}>
@@ -155,13 +162,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    height: vh(6),
+    height: vh(6.5),
     backgroundColor: Colors.SECONDRY_COLOR,
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-around',
     position: 'absolute',
-    bottom: 3,
+    bottom: 0,
   },
   TouchableTextStyle: {
     fontSize: vw(4),

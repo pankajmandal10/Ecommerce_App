@@ -1,16 +1,17 @@
 import * as React from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native';
-import Button from '../../components/common/Button';
+import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {vw, vh} from 'react-native-css-vh-vw';
 import Colors from '../../theme/Colors';
 import {StackActions, useIsFocused} from '@react-navigation/native';
 
 interface SignIn_SingUpProps {
   navigation: any;
 }
-const onPress = () => {};
 const SignIn_SingUp = (props: SignIn_SingUpProps) => {
   const onPress = (route: string) => {
-    props.navigation.dispatch(StackActions.replace(route, props.navigation));
+    props.navigation.dispatch(
+      StackActions.replace(route, {callback: 'performSignIn'}),
+    );
     // props.navigation.navigate(route, props.navigation);
   };
   return (
@@ -26,16 +27,16 @@ const SignIn_SingUp = (props: SignIn_SingUpProps) => {
           flexDirection: 'column',
           alignSelf: 'center',
         }}>
-        <Button
-          onPress={() => onPress('SignIn')}
-          title="Sign In"
-          style={styles.button}
-        />
-        <Button
-          onPress={() => onPress('SignUp')}
-          title="Sign Up"
-          style={styles.button}
-        />
+        <TouchableOpacity
+          style={styles.touchableButton}
+          onPress={() => onPress('SignIn')}>
+          <Text style={styles.touchbleTextStyle}>Sign In</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.touchableButton}
+          onPress={() => onPress('SignUp')}>
+          <Text style={styles.touchbleTextStyle}>Sign Up</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -75,5 +76,19 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: 4,
     borderColor: Colors.WHITE,
+  },
+  touchableButton: {
+    width: vw(40),
+    borderRadius: 30,
+    alignItems: 'center',
+    borderColor: Colors.WHITE,
+    borderWidth: 2,
+    padding: 10,
+    marginVertical: 10,
+  },
+  touchbleTextStyle: {
+    color: Colors.WHITE,
+    fontSize: 18,
+    fontWeight: '800',
   },
 });

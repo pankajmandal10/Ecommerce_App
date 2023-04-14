@@ -5,23 +5,17 @@ import {
   StyleSheet,
   Image,
   TextInput,
-  Modal,
-  SafeAreaView,
   useWindowDimensions,
 } from 'react-native';
-import {
-  GestureHandlerRootView,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native-gesture-handler';
-import Button from '../../components/common/Button';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Colors from '../../theme/Colors';
 import BottomSheet from '../BottomSheet';
 import {useAppDispatch, useAppSelector} from '../../hokes';
 import {signInPost, STATUSES} from '../../store/redux/UserSlice';
+import {vw, vh} from 'react-native-css-vh-vw';
 
-import {StackActions, useIsFocused} from '@react-navigation/native';
-import {getAsyncItem, setAsyncItem} from '../../services';
+import {StackActions} from '@react-navigation/native';
+import {setAsyncItem} from '../../services';
 import CustomeLoading from '../../components/common/CustomeLoading';
 
 interface SignInProps {
@@ -32,19 +26,26 @@ const SignIn = (props: SignInProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [forgotEmail, setForgotEmail] = useState('');
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const dispatch = useAppDispatch();
 
+  // Retrieve the callback function name on the SignIn screen
+  const callbackName = props.navigation?.callback;
+
+  // Convert the callback function name to a function object and call it
+  if (callbackName) {
+    const callback = eval(callbackName);
+    callback();
+  }
+
+  const {loginUser: loginUser, status}: any = useAppSelector(
+    state => state.loginUser,
+  );
   const {height} = useWindowDimensions();
   const bottomSheetRef: any = useRef();
-  const bottomSheetRef2: any = useRef();
+
   const pressHandler = useCallback(() => {
     bottomSheetRef.current.expand();
   }, []);
-  const pressHandler2 = useCallback(() => {
-    bottomSheetRef2.current.expand();
-  }, []);
-
-  const dispatch = useAppDispatch();
 
   const handleSignIn = async () => {
     if (email !== '' || password !== '') {
@@ -52,13 +53,13 @@ const SignIn = (props: SignInProps) => {
         email: email,
         password: password,
       };
-      dispatch(signInPost(data))
+      await dispatch(signInPost(data))
         .then(async response => {
           if (response.payload.error) {
             alert(response.payload.error);
           } else {
             await setAsyncItem('loginCredentials', 1);
-            props.navigation.dispatch(StackActions.replace('Home'));
+            props.navigation.dispatch(StackActions.replace('Main'));
           }
         })
         .catch(error => {
@@ -69,9 +70,18 @@ const SignIn = (props: SignInProps) => {
     }
   };
 
-  const handleModal = () => {
-    setShowForgotPassword(() => !showForgotPassword);
-  };
+  if (status === STATUSES.LOADING) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignContent: 'center',
+          alignSelf: 'center',
+        }}>
+        <CustomeLoading />
+      </View>
+    );
+  }
 
   return (
     <>
@@ -113,7 +123,7 @@ const SignIn = (props: SignInProps) => {
               enablesReturnKeyAutomatically
               onChangeText={password => setPassword(password)}
             />
-            <TouchableOpacity onPress={pressHandler2}>
+            <TouchableOpacity onPress={() => pressHandler()}>
               <Text style={styles.forgotPass}>Forgot Password?</Text>
             </TouchableOpacity>
 
@@ -127,25 +137,39 @@ const SignIn = (props: SignInProps) => {
                 flexWrap: 'wrap',
                 paddingHorizontal: 25,
               }}>
-              <Button
-                onPress={handleSignIn}
-                title="Sign In"
-                style={styles.buttonSignUP}
-              />
-              <Button
-                onPress={() => {
-                  props.navigation.navigate('SignUp', {props});
+              <TouchableOpacity
+                style={{
+                  ...styles.touchableButton,
+                  backgroundColor: Colors.WHITE,
                 }}
-                title="Sign Up"
-                style={styles.buttonSignIn}
-              />
+                onPress={() => {
+                  handleSignIn();
+                }}>
+                <Text
+                  style={{
+                    ...styles.touchbleTextStyle,
+                    color: Colors.BLACK,
+                  }}>
+                  Sign In
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.touchableButton}
+                onPress={() =>
+                  // Navigate to SignIn screen with callback function name
+                  props.navigation.navigate('SignUp', {
+                    callback: 'performSignUp',
+                  })
+                }>
+                <Text style={styles.touchbleTextStyle}>Sign Up</Text>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </View>
       </View>
       {/* Bottom sheet show on button call only */}
       <BottomSheet
-        ref={bottomSheetRef2}
+        ref={bottomSheetRef}
         activeHeight={height * 0.5}
         backgroundColor={'#08A092'}
         backDropColor={'black'}>
@@ -154,12 +178,6 @@ const SignIn = (props: SignInProps) => {
             flex: 1,
             justifyContent: 'space-around',
           }}>
-          {/* <View style={styles.imageContaier}>
-            <Image
-              source={require('../../images/cake1.png')}
-              style={styles.image}
-            />
-          </View> */}
           <View style={styles.textContainer}>
             <Text style={styles.text}>Enter Your Email</Text>
             <TextInput
@@ -171,34 +189,15 @@ const SignIn = (props: SignInProps) => {
               value={forgotEmail}
               placeholder="Enter Email..."
             />
-            {/* <Text style={styles.text}>Vissle dark Blue/Kabusa dark Navy</Text>
-            <Text style={styles.text}>Vissle dark Blue/Kabusa dark Navy</Text>
-            <Text style={styles.textPrice}>Price: $100</Text> */}
-            <Button
-              onPress={() => {
-                props.navigation.navigate('SignUp');
-              }}
-              title="Submite"
-              style={{
-                ...styles.buttonSignIn,
-                alignSelf: 'center',
-              }}
-            />
+            <TouchableOpacity
+              style={{...styles.touchableButton, alignSelf: 'center'}}
+              onPress={() => props.navigation.navigate('SignUp')}>
+              <Text style={styles.touchbleTextStyle}>Submite</Text>
+            </TouchableOpacity>
           </View>
 
           <View>
-            <View>
-              {/* <Button
-                onPress={() => {
-                  props.navigation.navigate('SignUp');
-                }}
-                title="Submite"
-                style={{
-                  ...styles.buttonSignIn,
-                  marginHorizontal: 30,
-                }}
-              /> */}
-            </View>
+            <View></View>
           </View>
         </View>
       </BottomSheet>
@@ -328,5 +327,19 @@ const styles = StyleSheet.create({
     color: '#000000',
     marginVertical: 20,
     fontSize: 16,
+  },
+  touchableButton: {
+    width: vw(40),
+    borderRadius: 30,
+    alignItems: 'center',
+    borderColor: Colors.WHITE,
+    borderWidth: 2,
+    padding: 10,
+    marginVertical: 10,
+  },
+  touchbleTextStyle: {
+    color: Colors.WHITE,
+    fontSize: 18,
+    fontWeight: '800',
   },
 });

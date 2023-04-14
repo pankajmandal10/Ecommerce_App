@@ -7,18 +7,17 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
-import {DataSource} from '../api/Data';
 import Colors from '../theme/Colors';
-import Button from './common/Button';
 import Rating from './common/Rating';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {any} from 'prop-types';
 import {vw, vh} from 'react-native-css-vh-vw';
 import {useAppDispatch, useAppSelector} from '../hokes';
-import {useDispatch} from 'react-redux';
-import {fetchProducts, STATUSES} from '../store/redux/ProductSlice';
-import {add, addDetailsProduct} from '../store/redux/CartSlice';
+import {
+  fetchProducts,
+  fetchSearchProducts,
+  STATUSES,
+} from '../store/redux/ProductSlice';
+import {addDetailsProduct} from '../store/redux/CartSlice';
 import CustomeLoading from './common/CustomeLoading';
 interface ItenListProps {
   navigation: any;
@@ -29,10 +28,13 @@ const ItenList = (props: ItenListProps) => {
   const [counter, setCounter] = useState(-2);
 
   const dispatch = useAppDispatch();
-  const {data: products, status}: any = useAppSelector(state => state.product);
+  const {Searcheddata: products, status}: any = useAppSelector(
+    state => state.product,
+  );
 
   useEffect(() => {
     dispatch(fetchProducts());
+    dispatch(fetchSearchProducts(undefined));
   }, []);
 
   if (status === STATUSES.LOADING) {
@@ -54,10 +56,10 @@ const ItenList = (props: ItenListProps) => {
 
   const addFunc = (item: any) => {
     dispatch(addDetailsProduct(item));
-    props.navigation.navigate('Details', {props});
+    props.navigation.navigate('Details');
   };
 
-  const Item = ({item, index}) => (
+  const renderItem = ({item, index}) => (
     <View style={styles.contener}>
       <TouchableOpacity onPress={() => addFunc(item)}>
         <View style={styles.item}>
@@ -111,7 +113,7 @@ const ItenList = (props: ItenListProps) => {
       <FlatList
         data={products}
         numColumns={2}
-        renderItem={({item, index}) => Item({item, index})}
+        renderItem={({item, index}) => renderItem({item, index})}
         keyExtractor={(item, index) => String(index)}
       />
     </View>

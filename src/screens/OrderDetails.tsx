@@ -26,7 +26,7 @@ const OrderDetails = (props: OrderDetailsProps) => {
   const [grand, setGrand] = useState(0);
   const [visible, setVisible] = useState(false);
   const [address, setAddress] = useState('');
-  const {cart: cart}: any = useAppSelector(state => state.cart);
+  const {cart: cart}: any = useAppSelector(state => state.addcart);
   const dispatch = useAppDispatch();
 
   const init = async () => {

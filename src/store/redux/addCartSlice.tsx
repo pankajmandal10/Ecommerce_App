@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const {createSlice, createAsyncThunk} = require('@reduxjs/toolkit');
 
 export const STATUSES = Object.freeze({
@@ -35,7 +37,7 @@ const addCartSlice = createSlice({
         state.status = STATUSES.LOADING;
       })
       .addCase(fetchCartItems.fulfilled, (state: any, action) => {
-        state.data = action.payload;
+        state.cart = action.payload;
         state.status = STATUSES.IDLE;
       })
       .addCase(fetchCartItems.rejected, (state: any, action) => {
@@ -51,8 +53,11 @@ export default addCartSlice.reducer;
 export const fetchCartItems = createAsyncThunk(
   'getaddetocartdata/fetch',
   async userId => {
+    console.warn(
+      `https://cackestoreapi.onrender.com/getaddetocartdata/${userId}`,
+    );
     const res = await fetch(
-      'https://cackestoreapi.onrender.com/getaddetocartdata/63f88487570928c73e26d7c4',
+      `https://cackestoreapi.onrender.com/getaddetocartdata/${userId}`,
     );
     const data = await res.json();
     return data;
@@ -61,17 +66,21 @@ export const fetchCartItems = createAsyncThunk(
 
 export const addToCartPost = createAsyncThunk(
   'addcartpost/fetch',
-  async (addcartdata, userId, productId) => {
+  async product => {
+    let dataSource = product;
+    dataSource.key = product.product._id;
+    dataSource.updatedPrice = product.product.price;
     try {
       let response = await fetch(
-        'https://cackestoreapi.onrender.com/addcartpost/63fb0a638db185910d377af2/64032496e9b8386f18e72244',
+        `https://cackestoreapi.onrender.com/addcartpost/${product.userId}/${product.product._id}`,
         {
           method: 'POST',
           mode: 'cors',
-          body: JSON.stringify(addcartdata),
+          body: JSON.stringify(dataSource),
           headers: {'Content-Type': 'application/json'},
         },
       );
+      // console.warn('addtocart resp', response);
       // let user = response.json();
       // return user;
     } catch (error) {
@@ -83,14 +92,41 @@ export const addToCartPost = createAsyncThunk(
 
 export const updateCartItem = createAsyncThunk(
   'updatequantity/fetch',
-  async (body, action, userId, productId) => {
-    try {
-      const updatedData = await fetch(
-        'https://cackestoreapi.onrender.com/updatequantity/increment/64032496e9b8386f18e72244/63fb0a638db185910d377af2',
-      ).then(res => res.json());
-      console.warn(updatedData);
-    } catch (error) {
-      alert(error);
-    }
+  async (dataSource: any) => {
+    const item = dataSource.body;
+    var data = {
+      key: item.key,
+      price: Math.round(item.product.price),
+      qty: 1,
+    };
+    console.warn(data);
+    console.warn(
+      `https://cackestoreapi.onrender.com/updatequantity/${dataSource.action}/${dataSource.body.key}/${dataSource.body.userId}`,
+    );
+    axios
+      .put(
+        `https://cackestoreapi.onrender.com/updatequantity/${dataSource.action}/${dataSource.body.key}/${dataSource.body.userId}`,
+        data,
+      )
+      .then(response => {
+        console.log('Item updated successfully');
+      })
+      .catch(error => {
+        console.error('Error update item:', error);
+      });
+  },
+);
+
+export const deleteAddCartItem = createAsyncThunk(
+  'deleteproduct/fetch',
+  async ({uId, pId}) => {
+    axios
+      .delete(`https://cackestoreapi.onrender.com/deleteproduct/${uId}/${pId}`)
+      .then(response => {
+        console.log('Item deleted successfully');
+      })
+      .catch(error => {
+        console.error('Error deleting item:', error);
+      });
   },
 );

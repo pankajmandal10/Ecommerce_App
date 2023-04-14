@@ -1,6 +1,7 @@
 const {createSlice, createAsyncThunk} = require('@reduxjs/toolkit');
 import Axios from 'axios';
 import {setAsyncItem} from '../../services';
+import axios from 'axios';
 
 export const STATUSES = Object.freeze({
   IDLE: 'idle',
@@ -12,10 +13,21 @@ const UserSlice = createSlice({
   name: 'user',
   initialState: {
     user: [],
+    singUpUser: [],
     status: STATUSES.IDLE,
   },
   extraReducers: builder => {
     builder
+      .addCase(signUpPost.pending, (state: any, action: any) => {
+        state.status = STATUSES.LOADING;
+      })
+      .addCase(signUpPost.fulfilled, (state: any, action) => {
+        state.singUpUser = action.payload;
+        state.status = STATUSES.IDLE;
+      })
+      .addCase(signUpPost.rejected, (state: any, action: any) => {
+        state.status = STATUSES.ERROR;
+      })
       .addCase(getLoggedUser.pending, (state: any, action: any) => {
         state.status = STATUSES.LOADING;
       })
@@ -29,41 +41,68 @@ const UserSlice = createSlice({
   },
 });
 
+export const logInSclice = createSlice({
+  name: 'loginUser',
+  initialState: {
+    loginUser: [],
+    status: STATUSES.IDLE,
+  },
+  extraReducers: builder => {
+    builder
+      .addCase(signInPost.pending, (state: any, action: any) => {
+        state.status = STATUSES.LOADING;
+      })
+      .addCase(signInPost.fulfilled, (state: any, action) => {
+        state.singUpUser = action.payload;
+        state.status = STATUSES.IDLE;
+      })
+      .addCase(signInPost.rejected, (state: any, action: any) => {
+        state.status = STATUSES.ERROR;
+      });
+  },
+});
+
 export const {setProducts, setStatus} = UserSlice.actions;
 export default UserSlice.reducer;
 
 // Thunks
-export const signUpPost = createAsyncThunk('type/postData', async userData => {
-  try {
-    let response = await fetch('https://cackestoreapi.onrender.com/signup', {
-      method: 'POST',
-      mode: 'cors',
-      body: JSON.stringify(userData),
-      headers: {'Content-Type': 'application/json'},
-    });
-    // let user = response.json();
-    // return user;
-  } catch (error) {
-    // this is the main part. Use the response property from the error object
-    return error.response;
-  }
-});
+export const signUpPost = createAsyncThunk(
+  'type/postData',
+  async (userData, thunkAPI) => {
+    console.warn(userData);
+    console.warn('https://cackestoreapi.onrender.com/signup');
 
-export const signInPost = createAsyncThunk('type/postData', async userData => {
-  try {
-    let response = await fetch('https://cackestoreapi.onrender.com/signin', {
-      method: 'POST',
-      mode: 'cors',
-      body: JSON.stringify(userData),
-      headers: {'Content-Type': 'application/json'},
-    }).then(res => res.json());
-    await setAsyncItem('loggedData', response);
-    return response;
-  } catch (error) {
-    // this is the main part. Use the response property from the error object
-    return error.response;
-  }
-});
+    try {
+      const response = await axios.post(
+        'https://cackestoreapi.onrender.com/signup',
+        userData,
+      );
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  },
+);
+
+export const signInPost = createAsyncThunk(
+  'type/postData',
+  async (userData, thunkAPI) => {
+    console.warn(userData);
+
+    try {
+      const response = await axios.post(
+        'https://cackestoreapi.onrender.com/signin',
+        userData,
+      );
+      console.warn(response.data);
+      await setAsyncItem('loggedData', response.data);
+      await setAsyncItem('userId', response.data.savedUser._id);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  },
+);
 
 export const userUpdate = createAsyncThunk(
   'userupdate/fetch',

@@ -34,7 +34,7 @@ const ProductDetailScreen = ({route, navigation}: ProductDetailScreenProps) => {
   const {product: product, status}: any = useAppSelector(state => state.cart);
   const data: any = product;
 
-  const onPress = (id: number) => {
+  const onPress = async (id: number) => {
     setColorId(id);
   };
   return (
@@ -129,36 +129,96 @@ const ProductDetailScreen = ({route, navigation}: ProductDetailScreenProps) => {
             justifyContent: 'space-between',
             flexWrap: 'wrap',
           }}>
-          <Button
-            onPress={() => onPress(1)}
-            title="0.5kg"
-            style={colorId === 1 ? styles.button1 : styles.button}
-          />
-          <Button
-            onPress={() => onPress(2)}
-            title="1kg"
-            style={colorId === 2 ? styles.button1 : styles.button}
-          />
-          <Button
-            onPress={() => onPress(3)}
-            title="2kg"
-            style={colorId === 3 ? styles.button1 : styles.button}
-          />
-          <Button
-            onPress={() => onPress(4)}
-            title="3kg"
-            style={colorId === 4 ? styles.button1 : styles.button}
-          />
-          <Button
-            onPress={() => onPress(5)}
-            title="4kg"
-            style={colorId === 5 ? styles.button1 : styles.button}
-          />
-          <Button
-            onPress={() => onPress(6)}
-            title="5kg"
-            style={colorId === 6 ? styles.button1 : styles.button}
-          />
+          <TouchableOpacity
+            style={{
+              ...styles.touchableButton,
+              backgroundColor:
+                colorId === 1 ? Colors.SECONDRY_COLOR : Colors.WHITE,
+            }}
+            onPress={() => onPress(1)}>
+            <Text
+              style={{
+                ...styles.touchbleTextStyle,
+                color: colorId === 1 ? Colors.WHITE : Colors.BLACK,
+              }}>
+              0.5Kg
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              ...styles.touchableButton,
+              backgroundColor:
+                colorId === 2 ? Colors.SECONDRY_COLOR : Colors.WHITE,
+            }}
+            onPress={() => onPress(2)}>
+            <Text
+              style={{
+                ...styles.touchbleTextStyle,
+                color: colorId === 2 ? Colors.WHITE : Colors.BLACK,
+              }}>
+              1Kg
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              ...styles.touchableButton,
+              backgroundColor:
+                colorId === 3 ? Colors.SECONDRY_COLOR : Colors.WHITE,
+            }}
+            onPress={() => onPress(3)}>
+            <Text
+              style={{
+                ...styles.touchbleTextStyle,
+                color: colorId === 3 ? Colors.WHITE : Colors.BLACK,
+              }}>
+              2Kg
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              ...styles.touchableButton,
+              backgroundColor:
+                colorId === 4 ? Colors.SECONDRY_COLOR : Colors.WHITE,
+            }}
+            onPress={() => onPress(4)}>
+            <Text
+              style={{
+                ...styles.touchbleTextStyle,
+                color: colorId === 4 ? Colors.WHITE : Colors.BLACK,
+              }}>
+              3Kg
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              ...styles.touchableButton,
+              backgroundColor:
+                colorId === 5 ? Colors.SECONDRY_COLOR : Colors.WHITE,
+            }}
+            onPress={() => onPress(5)}>
+            <Text
+              style={{
+                ...styles.touchbleTextStyle,
+                color: colorId === 5 ? Colors.WHITE : Colors.BLACK,
+              }}>
+              4Kg
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              ...styles.touchableButton,
+              backgroundColor:
+                colorId === 6 ? Colors.SECONDRY_COLOR : Colors.WHITE,
+            }}
+            onPress={() => onPress(6)}>
+            <Text
+              style={{
+                ...styles.touchbleTextStyle,
+                color: colorId === 6 ? Colors.WHITE : Colors.BLACK,
+              }}>
+              5Kg
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
       <AddProduct navigation={navigation} route={route} />
@@ -250,5 +310,19 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     borderRadius: 5,
     borderWidth: 1,
+  },
+  touchableButton: {
+    width: vw(20),
+    borderRadius: 10,
+    alignItems: 'center',
+    borderColor: Colors.SECONDRY_COLOR,
+    borderWidth: 2,
+    padding: 7,
+    marginVertical: 10,
+  },
+  touchbleTextStyle: {
+    color: Colors.BLACK,
+    fontSize: 16,
+    fontWeight: '800',
   },
 });

@@ -1,5 +1,4 @@
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -9,19 +8,18 @@ import {
   FlatList,
 } from 'react-native';
 import Colors from '../theme/Colors';
-import {CartItemStackPrams} from '../route/Routing';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {vw, vh} from 'react-native-css-vh-vw';
 import {useAppDispatch, useAppSelector} from '../hokes';
-import {
-  countTotalPrice,
-  decrementQuantity,
-  incrementQuantity,
-  remove,
-} from '../store/redux/CartSlice';
 import EmptyCartScreen from './EmptyCartScreen';
-import {setAsyncItem} from '../services';
-// type Props = NativeStackScreenProps<CartItemStackPrams, 'Cart'>;
+import {getAsyncItem, setAsyncItem} from '../services';
+import {
+  deleteAddCartItem,
+  fetchCartItems,
+  STATUSES,
+  updateCartItem,
+} from '../store/redux/addCartSlice';
+import CustomeLoading from '../components/common/CustomeLoading';
 
 interface AddProductProps {
   navigation: any;
@@ -29,46 +27,84 @@ interface AddProductProps {
 }
 
 const Cart = ({route, navigation}: AddProductProps) => {
-  const [addMoreItem, setAddMoreItem] = useState(1);
   const [grand, setGrand] = useState(0);
-  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    init();
+  }, []);
+
+  const init = async () => {
+    let data = 0;
+    cart.forEach(element => {
+      data = data + element.updatedPrice;
+    });
+    console.warn(data);
+    setGrand(data);
+    const userId = await getAsyncItem('userId');
+    await dispatch(fetchCartItems(userId));
+  };
+
   const {
     cart: cart,
     grandTotal: grandTotal,
     status,
-  }: any = useAppSelector(state => state.cart);
-  console.warn('cart', cart);
+  }: any = useAppSelector(state => state.addcart);
 
-  const handleRemove = productId => {
-    dispatch(remove(productId));
+  const dispatch = useAppDispatch();
+  const handleRemove = async (item: any) => {
+    await dispatch(deleteAddCartItem({uId: item.userId, pId: item.key})).then(
+      res => {
+        init();
+      },
+    );
   };
 
-  const handleMoreItem = productId => {
-    dispatch(incrementQuantity(productId));
+  const handleUpdatetItem = async (item: any, action: any) => {
+    const dataSource = {
+      body: item,
+      action: action,
+    };
+    if (action === 'increment') {
+      await dispatch(updateCartItem(dataSource)).then(res => init());
+    } else {
+      if (item.qty > 1) {
+        await dispatch(updateCartItem(dataSource)).then(res => init());
+      }
+    }
   };
-  const handleDecrimentItem = productId => {
-    dispatch(decrementQuantity(productId));
-  };
-  // const handleGrandTotal = () => {
-  //   dispatch(countTotalPrice(countTotalPrices));
-  // };
-  let grandTotalPrices: any = 0;
+
+  if (status === STATUSES.LOADING) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignContent: 'center',
+          alignSelf: 'center',
+        }}>
+        <CustomeLoading />
+      </View>
+    );
+  }
+
+  if (status === STATUSES.ERROR) {
+    return <Text>Something went wrong!</Text>;
+  }
+
   const Item = ({item, index}) => {
-    grandTotalPrices = grandTotalPrices + item.price * item.quantity;
-    // dispatch(countTotalPrice(grandTotalPrices));
-    setGrand(grandTotalPrices);
     return (
       <View style={styles.container}>
         <View style={styles.cartDetails}>
-          <Image style={styles.imageStyle} source={{uri: item.image}} />
+          <Image style={styles.imageStyle} source={{uri: item.product.image}} />
           <View
             style={{
               marginHorizontal: vw(3),
             }}>
-            <Text style={styles.textStyle}>{item.category}</Text>
-            <Text style={styles.textStyle}>Ratting *****</Text>
+            <Text style={styles.textStyle}>{item.product.title}</Text>
             <Text style={styles.textStyle}>
-              Rs: {item.price * item.quantity}
+              Ratting: {item.product.rating.rate}
+            </Text>
+            <Text style={styles.textStyle}>
+              Rs: {Math.round(item.updatedPrice)}
             </Text>
             <View style={{flexDirection: 'row'}}>
               <View
@@ -82,7 +118,7 @@ const Cart = ({route, navigation}: AddProductProps) => {
                   borderColor: Colors.WHITE,
                 }}>
                 <TouchableOpacity
-                  onPress={() => handleDecrimentItem(item._id)}
+                  onPress={() => handleUpdatetItem(item, 'decrement')}
                   style={styles.touchableButton}>
                   <Text style={styles.touchableTextStyle}>-</Text>
                 </TouchableOpacity>
@@ -92,17 +128,17 @@ const Cart = ({route, navigation}: AddProductProps) => {
                     paddingHorizontal: 20,
                     color: Colors.WHITE,
                   }}>
-                  {item.quantity}
+                  {item.qty}
                 </Text>
                 <TouchableOpacity
-                  onPress={() => handleMoreItem(item._id)}
+                  onPress={() => handleUpdatetItem(item, 'increment')}
                   style={styles.touchableButton}>
                   <Text style={styles.touchableTextStyle}>+</Text>
                 </TouchableOpacity>
               </View>
               <TouchableOpacity
                 onPress={() => {
-                  handleRemove(item._id);
+                  handleRemove(item);
                 }}
                 style={{
                   alignItems: 'center',
@@ -135,12 +171,12 @@ const Cart = ({route, navigation}: AddProductProps) => {
           />
           <View
             style={{
-              position: 'absolute',
+              // position: 'absolute',
               backgroundColor: Colors.DARK_SECONDRY_COLOR,
-              bottom: vh(0.5),
+              bottom: vh(0),
               width: vw(100),
               alignSelf: 'center',
-              padding: 7,
+              padding: 10,
               elevation: 9,
             }}>
             <View
@@ -162,7 +198,7 @@ const Cart = ({route, navigation}: AddProductProps) => {
                 justifyContent: 'space-around',
               }}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('Home')}
+                onPress={() => navigation.navigate('Homes')}
                 style={styles.buttonStyle}>
                 <Text style={{...styles.textStyle, textAlign: 'center'}}>
                   Continue Shopping
@@ -171,7 +207,7 @@ const Cart = ({route, navigation}: AddProductProps) => {
               <TouchableOpacity
                 onPress={async () => {
                   await setAsyncItem('grandTotal', grand);
-                  navigation.navigate('OrderDetails');
+                  navigation.navigate('Order Details');
                 }}
                 style={styles.buttonStyle}>
                 <Text style={{...styles.textStyle, textAlign: 'center'}}>

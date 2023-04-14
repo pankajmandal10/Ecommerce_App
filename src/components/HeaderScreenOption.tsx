@@ -2,25 +2,25 @@ import React, {useState} from 'react';
 import 'react-native-gesture-handler';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import RestaurantScreen from '../screens/Restaurant';
-import RestaurantsScreen from '../screens/Restaurants';
 import Colors from '../theme/Colors';
 import {
   CartItemStackPrams,
   ExploreStackParams,
-  RestaurantsStackParams,
+  ProfileStackPrams,
 } from '../route/Routing';
-import TopBackNavigation from '../navigator/TopBackNavigation';
 import ProductDetailScreen from '../screens/ProductDetailScreen';
 import AddProduct from './AddProduct';
-import {Text, TouchableOpacity, View} from 'react-native';
 import HeaderNavBar from '../navigator/HeaderNavBar';
 import Cart from '../screens/AddedCartItem';
 import HomeScreen from '../screens/HomeScreen';
 import OrderDetails from '../screens/OrderDetails';
+import ProfileScreen from '../screens/ProfileScreen';
+import SignUp from '../screens/authStack/SignUp';
+import {createStackNavigator} from '@react-navigation/stack';
 
+const Stack = createStackNavigator();
 const ExploreStack = createNativeStackNavigator<ExploreStackParams>();
-const RestaurantsStack = createNativeStackNavigator<RestaurantsStackParams>();
+const ProfileStack = createNativeStackNavigator<ProfileStackPrams>();
 const CartItemStack = createNativeStackNavigator<CartItemStackPrams>();
 
 export const ExploreScreenStack = (props: any) => {
@@ -62,27 +62,25 @@ export const ExploreScreenStack = (props: any) => {
         name="AddProduct"
         component={AddProduct}
       />
-      {/* <ExploreStack.Screen
-        name="Cart"
+
+      <Stack.Screen
+        name="My Cart"
         component={Cart}
         options={({navigation, route}) => ({
           header: props => (
             <HeaderNavBar navigation={navigation} props={props} route={route} />
           ),
         })}
-      /> */}
-      {/* <ExploreStack.Screen
-        name="Restaurant"
-        component={RestaurantScreen}
+      />
+      <Stack.Screen
         options={({navigation, route}) => ({
-          // headerLeft: props => (
-          //   <TopBackNavigation navigation={navigation} props={props} />
-          // ),
           header: props => (
             <HeaderNavBar navigation={navigation} props={props} route={route} />
           ),
         })}
-      /> */}
+        name="Order Details"
+        component={OrderDetails}
+      />
     </ExploreStack.Navigator>
   );
 };
@@ -105,9 +103,6 @@ export const AddedCartItemStack = (props: any) => {
       <CartItemStack.Screen
         name="Carts"
         options={({navigation, route}) => ({
-          // headerLeft: props => (
-          //   <TopBackNavigation navigation={navigation} props={props} />
-          // ),
           header: props => (
             <HeaderNavBar navigation={navigation} props={props} route={route} />
           ),
@@ -123,23 +118,23 @@ export const AddedCartItemStack = (props: any) => {
         name="AddProduct"
         component={AddProduct}
       />
-      <CartItemStack.Screen
+      <Stack.Screen
         options={({navigation, route}) => ({
           header: props => (
             <HeaderNavBar navigation={navigation} props={props} route={route} />
           ),
         })}
-        name="OrderDetails"
+        name="Order Details"
         component={OrderDetails}
       />
     </CartItemStack.Navigator>
   );
 };
 
-export const RestaurantScreenStack = (props: any) => {
+export const ProfileStacks = (props: any) => {
   return (
-    <RestaurantsStack.Navigator
-      initialRouteName="Restaurants"
+    <ProfileStack.Navigator
+      initialRouteName="ProfileStack"
       screenOptions={{
         title: props.route.name,
         headerStyle: {
@@ -151,19 +146,16 @@ export const RestaurantScreenStack = (props: any) => {
           fontWeight: 'bold',
         },
       }}>
-      <RestaurantsStack.Screen
-        name="Restaurants"
-        component={RestaurantsScreen}
+      <ProfileStack.Screen
+        name="ProfileStack"
+        options={{headerShown: false}}
+        component={ProfileScreen}
       />
-      <RestaurantsStack.Screen
-        options={({navigation, route}) => ({
-          header: props => (
-            <HeaderNavBar navigation={navigation} props={props} route={route} />
-          ),
-        })}
-        name="Restaurant"
-        component={RestaurantScreen}
+      <ProfileStack.Screen
+        options={{headerShown: false}}
+        name="Signup"
+        component={SignUp}
       />
-    </RestaurantsStack.Navigator>
+    </ProfileStack.Navigator>
   );
 };

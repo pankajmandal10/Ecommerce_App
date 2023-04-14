@@ -4,7 +4,7 @@ import MainNavigation from './src/navigator/MainNavigation';
 
 const Stack = createStackNavigator();
 function App() {
-  return <MainNavigation />;
+  return <MainNavigation props={undefined} navigation={''} />;
 }
 
 export default App;
