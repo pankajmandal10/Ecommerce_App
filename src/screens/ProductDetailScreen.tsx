@@ -14,11 +14,12 @@ import {ExploreStackParams} from '../route/Routing';
 import Colors from '../theme/Colors';
 import Button from '../components/common/Button';
 import AddProduct from '../components/AddProduct';
-import {vw, vh} from 'react-native-css-vh-vw';
+import {vh, vw} from 'react-native-expo-viewport-units';
 import {useAppSelector} from '../hokes';
 // import {Ionicons, AntDesign} from '@expo/vector-icons';
 // import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import ErrorNetwork from '../components/common/ErrorNetwork';
 
 type Props = NativeStackScreenProps<ExploreStackParams, 'Details'>;
 
@@ -38,191 +39,200 @@ const ProductDetailScreen = ({route, navigation}: ProductDetailScreenProps) => {
     setColorId(id);
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.imageCard}>
-        <View
-          style={{
-            position: 'absolute',
-            flex: 1,
-            padding: 12,
-            alignSelf: 'flex-end',
-          }}>
-          <TouchableOpacity
-            onPress={() => {
-              setLiked(!liked);
-              setCounter(0);
+    <ErrorNetwork>
+      <View style={styles.container}>
+        <View style={styles.imageCard}>
+          <View
+            style={{
+              position: 'absolute',
+              flex: 1,
+              padding: 12,
+              alignSelf: 'flex-end',
             }}>
-            <Ionicons
-              name={
-                liked && 0 == counter
-                  ? 'ios-heart-circle-outline'
-                  : 'ios-heart-circle-sharp'
-              }
-              size={34}
-              color={liked && 0 == counter ? '#F50B5C' : 'white'}
+            <TouchableOpacity
               onPress={() => {
                 setLiked(!liked);
                 setCounter(0);
-              }}
+              }}>
+              <Ionicons
+                name={
+                  liked && 0 == counter
+                    ? 'ios-heart-circle-outline'
+                    : 'ios-heart-circle-sharp'
+                }
+                size={34}
+                color={liked && 0 == counter ? '#F50B5C' : 'white'}
+                onPress={() => {
+                  setLiked(!liked);
+                  setCounter(0);
+                }}
+              />
+            </TouchableOpacity>
+            <Ionicons
+              style={{paddingVertical: 10}}
+              name="md-arrow-redo-circle-sharp"
+              size={34}
+              color="white"
             />
-          </TouchableOpacity>
-          <Ionicons
-            style={{paddingVertical: 10}}
-            name="md-arrow-redo-circle-sharp"
-            size={34}
-            color="white"
-          />
-        </View>
-        <Image style={styles.imageStyle} source={{uri: data.image}} />
-        <Rating Size={vw(5)} />
-      </View>
-      <Text style={styles.title}>{data.title}</Text>
-      <Text style={styles.discription}>{data.description}</Text>
-      <View
-        style={{
-          flexDirection: 'row',
-          margin: 4,
-        }}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignContent: 'center',
-          }}>
-          <Text style={{fontSize: vw(9), color: Colors.BLACK}}>
-            {Math.round(data.price)}
-          </Text>
-        </View>
-        <View
-          style={{
-            flex: 3,
-            justifyContent: 'center',
-            alignContent: 'center',
-          }}>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 14, textDecorationLine: 'line-through'}}>
-              ₹ 350
-            </Text>
-            <Text style={{color: 'green'}}> (15% OFF)</Text>
           </View>
-          <Text style={{fontSize: 14}}>Inclusive all taxes</Text>
+          <Image style={styles.imageStyle} source={{uri: data.image}} />
+          <Rating Size={vw(5)} />
         </View>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          margin: 4,
-        }}>
+        <Text style={styles.title}>{data.title}</Text>
+        <Text style={styles.discription}>{data.description}</Text>
         <View
           style={{
-            flex: 1,
-          }}>
-          <Text style={{fontSize: vw(6), color: Colors.BLACK_OPACITY_7}}>
-            Weight :
-          </Text>
-        </View>
-        <View
-          style={{
-            flex: 3,
             flexDirection: 'row',
-            width: 'auto',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
+            margin: 4,
           }}>
-          <TouchableOpacity
+          <View
             style={{
-              ...styles.touchableButton,
-              backgroundColor:
-                colorId === 1 ? Colors.SECONDRY_COLOR : Colors.WHITE,
-            }}
-            onPress={() => onPress(1)}>
-            <Text
-              style={{
-                ...styles.touchbleTextStyle,
-                color: colorId === 1 ? Colors.WHITE : Colors.BLACK,
-              }}>
-              0.5Kg
+              flex: 1,
+              justifyContent: 'center',
+              alignContent: 'center',
+            }}>
+            <Text style={{fontSize: vw(9), color: Colors.BLACK}}>
+              {Math.round(data.price)}
             </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </View>
+          <View
             style={{
-              ...styles.touchableButton,
-              backgroundColor:
-                colorId === 2 ? Colors.SECONDRY_COLOR : Colors.WHITE,
-            }}
-            onPress={() => onPress(2)}>
-            <Text
-              style={{
-                ...styles.touchbleTextStyle,
-                color: colorId === 2 ? Colors.WHITE : Colors.BLACK,
-              }}>
-              1Kg
+              flex: 3,
+              justifyContent: 'center',
+              alignContent: 'center',
+            }}>
+            <View style={{flexDirection: 'row'}}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: 'black',
+                  textDecorationLine: 'line-through',
+                }}>
+                ₹ 350
+              </Text>
+              <Text style={{color: 'green'}}> (15% OFF)</Text>
+            </View>
+            <Text style={{fontSize: 14, color: 'black'}}>
+              Inclusive all taxes
             </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              ...styles.touchableButton,
-              backgroundColor:
-                colorId === 3 ? Colors.SECONDRY_COLOR : Colors.WHITE,
-            }}
-            onPress={() => onPress(3)}>
-            <Text
-              style={{
-                ...styles.touchbleTextStyle,
-                color: colorId === 3 ? Colors.WHITE : Colors.BLACK,
-              }}>
-              2Kg
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              ...styles.touchableButton,
-              backgroundColor:
-                colorId === 4 ? Colors.SECONDRY_COLOR : Colors.WHITE,
-            }}
-            onPress={() => onPress(4)}>
-            <Text
-              style={{
-                ...styles.touchbleTextStyle,
-                color: colorId === 4 ? Colors.WHITE : Colors.BLACK,
-              }}>
-              3Kg
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              ...styles.touchableButton,
-              backgroundColor:
-                colorId === 5 ? Colors.SECONDRY_COLOR : Colors.WHITE,
-            }}
-            onPress={() => onPress(5)}>
-            <Text
-              style={{
-                ...styles.touchbleTextStyle,
-                color: colorId === 5 ? Colors.WHITE : Colors.BLACK,
-              }}>
-              4Kg
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              ...styles.touchableButton,
-              backgroundColor:
-                colorId === 6 ? Colors.SECONDRY_COLOR : Colors.WHITE,
-            }}
-            onPress={() => onPress(6)}>
-            <Text
-              style={{
-                ...styles.touchbleTextStyle,
-                color: colorId === 6 ? Colors.WHITE : Colors.BLACK,
-              }}>
-              5Kg
-            </Text>
-          </TouchableOpacity>
+          </View>
         </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            margin: 4,
+          }}>
+          <View
+            style={{
+              flex: 1,
+            }}>
+            <Text style={{fontSize: vw(6), color: Colors.BLACK_OPACITY_7}}>
+              Weight :
+            </Text>
+          </View>
+          <View
+            style={{
+              flex: 3,
+              flexDirection: 'row',
+              width: 'auto',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+            }}>
+            <TouchableOpacity
+              style={{
+                ...styles.touchableButton,
+                backgroundColor:
+                  colorId === 1 ? Colors.SECONDRY_COLOR : Colors.WHITE,
+              }}
+              onPress={() => onPress(1)}>
+              <Text
+                style={{
+                  ...styles.touchbleTextStyle,
+                  color: colorId === 1 ? Colors.WHITE : Colors.BLACK,
+                }}>
+                0.5Kg
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                ...styles.touchableButton,
+                backgroundColor:
+                  colorId === 2 ? Colors.SECONDRY_COLOR : Colors.WHITE,
+              }}
+              onPress={() => onPress(2)}>
+              <Text
+                style={{
+                  ...styles.touchbleTextStyle,
+                  color: colorId === 2 ? Colors.WHITE : Colors.BLACK,
+                }}>
+                1Kg
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                ...styles.touchableButton,
+                backgroundColor:
+                  colorId === 3 ? Colors.SECONDRY_COLOR : Colors.WHITE,
+              }}
+              onPress={() => onPress(3)}>
+              <Text
+                style={{
+                  ...styles.touchbleTextStyle,
+                  color: colorId === 3 ? Colors.WHITE : Colors.BLACK,
+                }}>
+                2Kg
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                ...styles.touchableButton,
+                backgroundColor:
+                  colorId === 4 ? Colors.SECONDRY_COLOR : Colors.WHITE,
+              }}
+              onPress={() => onPress(4)}>
+              <Text
+                style={{
+                  ...styles.touchbleTextStyle,
+                  color: colorId === 4 ? Colors.WHITE : Colors.BLACK,
+                }}>
+                3Kg
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                ...styles.touchableButton,
+                backgroundColor:
+                  colorId === 5 ? Colors.SECONDRY_COLOR : Colors.WHITE,
+              }}
+              onPress={() => onPress(5)}>
+              <Text
+                style={{
+                  ...styles.touchbleTextStyle,
+                  color: colorId === 5 ? Colors.WHITE : Colors.BLACK,
+                }}>
+                4Kg
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                ...styles.touchableButton,
+                backgroundColor:
+                  colorId === 6 ? Colors.SECONDRY_COLOR : Colors.WHITE,
+              }}
+              onPress={() => onPress(6)}>
+              <Text
+                style={{
+                  ...styles.touchbleTextStyle,
+                  color: colorId === 6 ? Colors.WHITE : Colors.BLACK,
+                }}>
+                5Kg
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <AddProduct navigation={navigation} route={route} />
       </View>
-      <AddProduct navigation={navigation} route={route} />
-    </View>
+    </ErrorNetwork>
   );
 };
 
@@ -323,6 +333,6 @@ const styles = StyleSheet.create({
   touchbleTextStyle: {
     color: Colors.BLACK,
     fontSize: 16,
-    fontWeight: '800',
+    fontWeight: '700',
   },
 });

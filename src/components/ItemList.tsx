@@ -39,14 +39,14 @@ const ItenList = (props: ItenListProps) => {
 
   if (status === STATUSES.LOADING) {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignContent: 'center',
-          alignSelf: 'center',
-        }}>
-        <CustomeLoading />
-      </View>
+      // <View
+      //   style={{
+      //     flex: 1,
+      //     alignContent: 'center',
+      //     alignSelf: 'center',
+      //   }}>
+      <CustomeLoading />
+      // </View>
     );
   }
 

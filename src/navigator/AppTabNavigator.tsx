@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import 'react-native-gesture-handler';
-import {vw, vh} from 'react-native-css-vh-vw';
+import {vh, vw} from 'react-native-expo-viewport-units';
 import Colors from '../theme/Colors';
 import {
   AddedCartItemStack,
@@ -10,10 +10,20 @@ import {
 import {RootStack} from '../route/Routing';
 import {TabIcon} from '../components/common/TabBarIcon';
 import {Text, View} from 'react-native';
-import {useAppSelector} from '../hokes';
+import {useAppDispatch, useAppSelector} from '../hokes';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
+import {getAsyncItem} from '../services';
+import {fetchCartItems} from '../store/redux/addCartSlice';
 
 const MainScreen = () => {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    init();
+  }, []);
+  const init = async () => {
+    const userId = await getAsyncItem('userId');
+    await dispatch(fetchCartItems(userId));
+  };
   const {cart: cart}: any = useAppSelector(state => state.addcart);
 
   return (
@@ -29,10 +39,11 @@ const MainScreen = () => {
           console.log(routeName);
           if (
             routeName === 'AddProduct' ||
-            routeName === 'Order Details' ||
+            routeName === 'Orderdetails' ||
             routeName === 'Details' ||
             routeName === 'Cart' ||
-            routeName === 'My Cart'
+            routeName === 'My Cart' ||
+            routeName === 'Order Successful'
           ) {
             return {display: 'none'};
           }

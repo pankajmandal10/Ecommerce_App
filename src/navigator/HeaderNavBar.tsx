@@ -18,11 +18,17 @@ const HeaderNavBar = (props: HeaderNavBarProps) => {
         backgroundColor: Colors.PRIMERY_COLOR,
         height: 50,
       }}>
-      <TouchableOpacity style={{padding: 10}}>
+      <TouchableOpacity
+        style={{
+          marginVertical: 10,
+          marginHorizontal: 15,
+        }}>
         <TopBackNavigation navigation={props.navigation} props={props} />
       </TouchableOpacity>
       <Text
         style={{
+          width: '70%',
+          // backgroundColor: 'red',
           padding: 10,
           fontSize: 20,
           fontWeight: '600',

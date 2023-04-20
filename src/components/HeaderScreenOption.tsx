@@ -17,6 +17,7 @@ import OrderDetails from '../screens/OrderDetails';
 import ProfileScreen from '../screens/ProfileScreen';
 import SignUp from '../screens/authStack/SignUp';
 import {createStackNavigator} from '@react-navigation/stack';
+import OrderSuccessfulScreen from '../screens/OrderSuccessfulScreen';
 
 const Stack = createStackNavigator();
 const ExploreStack = createNativeStackNavigator<ExploreStackParams>();
@@ -62,7 +63,6 @@ export const ExploreScreenStack = (props: any) => {
         name="AddProduct"
         component={AddProduct}
       />
-
       <Stack.Screen
         name="My Cart"
         component={Cart}
@@ -72,14 +72,23 @@ export const ExploreScreenStack = (props: any) => {
           ),
         })}
       />
+      <CartItemStack.Screen
+        options={({navigation, route}) => ({
+          header: props => (
+            <HeaderNavBar navigation={navigation} props={props} route={route} />
+          ),
+        })}
+        name="Orderdetails"
+        component={OrderDetails}
+      />
       <Stack.Screen
         options={({navigation, route}) => ({
           header: props => (
             <HeaderNavBar navigation={navigation} props={props} route={route} />
           ),
         })}
-        name="Order Details"
-        component={OrderDetails}
+        name="Order Successful"
+        component={OrderSuccessfulScreen}
       />
     </ExploreStack.Navigator>
   );
@@ -118,14 +127,23 @@ export const AddedCartItemStack = (props: any) => {
         name="AddProduct"
         component={AddProduct}
       />
+      <CartItemStack.Screen
+        options={({navigation, route}) => ({
+          header: props => (
+            <HeaderNavBar navigation={navigation} props={props} route={route} />
+          ),
+        })}
+        name="Orderdetails"
+        component={OrderDetails}
+      />
       <Stack.Screen
         options={({navigation, route}) => ({
           header: props => (
             <HeaderNavBar navigation={navigation} props={props} route={route} />
           ),
         })}
-        name="Order Details"
-        component={OrderDetails}
+        name="Order Successful"
+        component={OrderSuccessfulScreen}
       />
     </CartItemStack.Navigator>
   );
@@ -147,8 +165,12 @@ export const ProfileStacks = (props: any) => {
         },
       }}>
       <ProfileStack.Screen
-        name="ProfileStack"
-        options={{headerShown: false}}
+        name="Profile"
+        options={({navigation, route}) => ({
+          header: props => (
+            <HeaderNavBar navigation={navigation} props={props} route={route} />
+          ),
+        })}
         component={ProfileScreen}
       />
       <ProfileStack.Screen

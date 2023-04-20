@@ -7,25 +7,37 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
-import {vw, vh} from 'react-native-css-vh-vw';
+import {vh, vw} from 'react-native-expo-viewport-units';
 import {ScrollView, TextInput} from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CustomeLoading from '../components/common/CustomeLoading';
 import {useAppDispatch, useAppSelector} from '../hokes';
 import {getAsyncItem} from '../services';
 import {getLoggedUser, STATUSES, userUpdate} from '../store/redux/UserSlice';
 import Colors from '../theme/Colors';
+import Radio from '../components/common/RadioButton';
+import ErrorNetwork from '../components/common/ErrorNetwork';
 
 interface OrderDetailsProps {
   navigation: any;
 }
+const paymentMethodOptions = [
+  'Other UPI Apps',
+  'Pay with Debit/Credit/ATM Cards',
+  'Net Banking',
+  'EMI',
+  'Cash on Delivery',
+];
 
 const OrderDetails = (props: OrderDetailsProps) => {
   const [grand, setGrand] = useState(0);
   const [visible, setVisible] = useState(false);
   const [address, setAddress] = useState('');
+  const [hide, setHide] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('Cash on Delivery');
   const {cart: cart}: any = useAppSelector(state => state.addcart);
   const dispatch = useAppDispatch();
 
@@ -123,225 +135,274 @@ const OrderDetails = (props: OrderDetailsProps) => {
     );
   }
 
-  return (
-    <>
-      <ScrollView>
-        <View style={styles.container}>
-          <Text style={styles.textStyle}>Delevering to</Text>
-          <View style={styles.card}>
-            <Image
-              style={styles.imageStyle}
-              source={require('../images/user.png')}
-            />
-            <View style={{paddingHorizontal: 10, justifyContent: 'center'}}>
-              <Text style={{...styles.textStyle, fontSize: 15}}>
-                {user.phone}
-              </Text>
-              <Text style={{...styles.textStyle, fontSize: 15}}>
-                {user.name}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.card}>
-            <Ionicons name="location-sharp" size={24} color="tomato" />
-            <View
-              style={{
-                flexDirection: 'column',
-                width: '95%',
-              }}>
-              <View
-                style={{
-                  paddingHorizontal: 10,
-                  justifyContent: 'space-between',
-                  flexDirection: 'row',
-                }}>
-                <Text style={{...styles.textStyle, fontSize: 15}}>
-                  Delevery Address
-                </Text>
-                <TouchableOpacity onPress={() => setVisible(true)}>
-                  <Text
-                    style={{
-                      ...styles.textStyle,
-                      fontSize: 15,
-                      color: 'tomato',
-                    }}>
-                    Change
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  paddingHorizontal: 10,
-                  width: '90%',
-                }}>
-                <Text style={styles.textStyle1}>Home</Text>
-                <Text style={styles.textStyle1}>{user.address}</Text>
-              </View>
-            </View>
-          </View>
+  const handleSelect = option => {
+    setSelectedOption(option);
+  };
 
-          <View style={styles.card}>
-            <Ionicons name="ios-timer-outline" size={24} color="tomato" />
+  return (
+    <ErrorNetwork>
+      <>
+        <ScrollView>
+          <View style={styles.container}>
+            <Text style={styles.textStyle}>Delevering to</Text>
+            <View style={styles.card}>
+              <Image
+                style={styles.imageStyle}
+                source={require('../images/user.png')}
+              />
+              <View style={{paddingHorizontal: 10, justifyContent: 'center'}}>
+                <Text style={{...styles.textStyle, fontSize: 15}}>
+                  {user.phone}
+                </Text>
+                <Text style={{...styles.textStyle, fontSize: 15}}>
+                  {user.name}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.card}>
+              <Ionicons name="location-sharp" size={24} color="tomato" />
+              <View
+                style={{
+                  flexDirection: 'column',
+                  width: '95%',
+                }}>
+                <View
+                  style={{
+                    paddingHorizontal: 10,
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
+                  }}>
+                  <Text style={{...styles.textStyle, fontSize: 15}}>
+                    Delevery Address
+                  </Text>
+                  <TouchableOpacity onPress={() => setVisible(true)}>
+                    <Text
+                      style={{
+                        ...styles.textStyle,
+                        fontSize: 15,
+                        color: 'tomato',
+                      }}>
+                      Change
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    paddingHorizontal: 10,
+                    width: '90%',
+                  }}>
+                  <Text style={styles.textStyle1}>Home</Text>
+                  <Text style={styles.textStyle1}>{user.address}</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.card}>
+              <Ionicons name="ios-timer-outline" size={24} color="tomato" />
+              <View
+                style={{
+                  flexDirection: 'column',
+                  width: '95%',
+                }}>
+                <View
+                  style={{
+                    paddingHorizontal: 10,
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
+                  }}>
+                  <Text style={{...styles.textStyle, fontSize: 15}}>
+                    Delevery Time
+                  </Text>
+                  <TouchableOpacity>
+                    <Text
+                      style={{
+                        ...styles.textStyle,
+                        fontSize: 15,
+                        color: 'tomato',
+                      }}>
+                      Change
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    paddingHorizontal: 10,
+                  }}>
+                  <Text style={styles.textStyle1}>10 March,2023 9:30am </Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.card}>
+              <MaterialIcons name="payment" size={24} color="tomato" />
+              <View
+                style={{
+                  flexDirection: 'column',
+                  width: '95%',
+                }}>
+                <View
+                  style={{
+                    paddingHorizontal: 10,
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
+                  }}>
+                  <Text style={{...styles.textStyle, fontSize: 15}}>
+                    Payment Method
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => setHide(hide ? false : true)}>
+                    <Text
+                      style={{
+                        ...styles.textStyle,
+                        fontSize: 15,
+                        color: 'tomato',
+                      }}>
+                      Change
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {selectedOption && (
+                  <View
+                    style={{
+                      width: '100%',
+                      borderRadius: 7,
+                      borderWidth: 1,
+                      borderColor: 'tomato',
+                      padding: 10,
+                      marginTop: 7,
+                      flexDirection: 'row',
+                    }}>
+                    <MaterialIcons
+                      name="done-outline"
+                      style={{fontWeight: 'bold', paddingHorizontal: 10}}
+                      size={24}
+                      color="green"
+                    />
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        textAlign: 'center',
+                        width: '87%',
+                        color: '#000000',
+                      }}>
+                      {selectedOption}
+                    </Text>
+                  </View>
+                )}
+                {hide ? (
+                  <View
+                    style={
+                      {
+                        // paddingHorizontal: 10,
+                      }
+                    }>
+                    <TouchableOpacity>
+                      <Radio
+                        options={paymentMethodOptions}
+                        onSelect={handleSelect}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                ) : null}
+              </View>
+            </View>
             <View
               style={{
+                ...styles.card,
                 flexDirection: 'column',
-                width: '95%',
               }}>
               <View
                 style={{
-                  paddingHorizontal: 10,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingVertical: 3,
+                }}>
+                <Text style={styles.textStyle1}>Item Total</Text>
+                <Text style={styles.textStyle1}>Rs. {grand}</Text>
+              </View>
+              <View
+                style={{
                   justifyContent: 'space-between',
                   flexDirection: 'row',
+                  paddingVertical: 3,
                 }}>
-                <Text style={{...styles.textStyle, fontSize: 15}}>
-                  Delevery Time
-                </Text>
-                <TouchableOpacity>
-                  <Text
-                    style={{
-                      ...styles.textStyle,
-                      fontSize: 15,
-                      color: 'tomato',
-                    }}>
-                    Change
-                  </Text>
-                </TouchableOpacity>
+                <Text style={styles.textStyle1}>Delevery Charge</Text>
+                <Text style={styles.textStyle1}>Rs. 50</Text>
               </View>
               <View
                 style={{
-                  paddingHorizontal: 10,
-                }}>
-                <Text style={styles.textStyle1}>10 March,2023 9:30am </Text>
-              </View>
-            </View>
-          </View>
-          <View style={styles.card}>
-            <MaterialIcons name="payment" size={24} color="tomato" />
-            <View
-              style={{
-                flexDirection: 'column',
-                width: '95%',
-              }}>
-              <View
-                style={{
-                  paddingHorizontal: 10,
                   justifyContent: 'space-between',
                   flexDirection: 'row',
+                  paddingVertical: 3,
                 }}>
-                <Text style={{...styles.textStyle, fontSize: 15}}>
-                  Payment Method fgh usifg
-                </Text>
-                <TouchableOpacity>
-                  <Text
-                    style={{
-                      ...styles.textStyle,
-                      fontSize: 15,
-                      color: 'tomato',
-                    }}>
-                    Change
-                  </Text>
-                </TouchableOpacity>
+                <Text style={styles.textStyle1}>Promo - (PROMO10)</Text>
+                <Text style={styles.textStyle1}>Item Total</Text>
               </View>
-              <View
+            </View>
+          </View>
+        </ScrollView>
+        {onChangeHandler()}
+        <View
+          style={{
+            position: 'absolute',
+            backgroundColor: Colors.DARK_SECONDRY_COLOR,
+            bottom: 0,
+            width: vw(100),
+            alignSelf: 'center',
+            padding: 7,
+            elevation: 9,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <View>
+            <View style={{flexDirection: 'row'}}>
+              <FontAwesome
+                name="rupee"
+                style={{paddingTop: 4}}
+                size={30}
+                color="white"
+              />
+              <Text
                 style={{
-                  paddingHorizontal: 10,
+                  fontSize: 28,
+                  paddingHorizontal: 3,
+                  fontWeight: '600',
+                  color: 'white',
                 }}>
-                <Text style={styles.textStyle1}>1233 **** **** 4758</Text>
-              </View>
+                {Math.round(grand + 50)}
+              </Text>
             </View>
-          </View>
-          <View
-            style={{
-              ...styles.card,
-              flexDirection: 'column',
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingVertical: 3,
-              }}>
-              <Text style={styles.textStyle1}>Item Total</Text>
-              <Text style={styles.textStyle1}>Rs. {Math.round(grand)}</Text>
-            </View>
-            <View
-              style={{
-                justifyContent: 'space-between',
-                flexDirection: 'row',
-                paddingVertical: 3,
-              }}>
-              <Text style={styles.textStyle1}>Delevery Charge</Text>
-              <Text style={styles.textStyle1}>Rs. 50</Text>
-            </View>
-            <View
-              style={{
-                justifyContent: 'space-between',
-                flexDirection: 'row',
-                paddingVertical: 3,
-              }}>
-              <Text style={styles.textStyle1}>Promo - (PROMO10)</Text>
-              <Text style={styles.textStyle1}>Item Total</Text>
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-      {onChangeHandler()}
-      <View
-        style={{
-          position: 'absolute',
-          backgroundColor: Colors.DARK_SECONDRY_COLOR,
-          bottom: vh(0.5),
-          width: vw(100),
-          alignSelf: 'center',
-          padding: 7,
-          elevation: 9,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}>
-        <View>
-          <View style={{flexDirection: 'row'}}>
-            <FontAwesome
-              name="rupee"
-              style={{paddingTop: 4}}
-              size={30}
-              color="white"
-            />
-            <Text
-              style={{
-                fontSize: 28,
-                paddingHorizontal: 3,
-                fontWeight: '600',
-                color: 'white',
-              }}>
-              {Math.round(grand + 50)}
+            <Text style={{fontSize: 14, color: 'white'}}>
+              Your order ({cart.length} items)
             </Text>
           </View>
-          <Text style={{fontSize: 14, color: 'white'}}>
-            Your order ({cart.length} items)
-          </Text>
-        </View>
-        <TouchableOpacity
-          style={{
-            padding: 7,
-            alignContent: 'center',
-            borderRadius: 5,
-            borderWidth: 1,
-            borderColor: 'white',
-            height: 40,
-            top: 12,
-          }}>
-          <Text
+          <TouchableOpacity
+            onPress={() => {
+              selectedOption == null
+                ? alert('Please Select the Payment Method')
+                : props.navigation.navigate('Order Successful');
+            }}
             style={{
-              fontWeight: '600',
-              top: 2,
-              color: 'white',
-              textAlign: 'center',
+              padding: 7,
+              alignContent: 'center',
+              borderRadius: 5,
+              borderWidth: 1,
+              borderColor: 'white',
+              height: 40,
+              top: 12,
             }}>
-            PLACE ORDER
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </>
+            <Text
+              style={{
+                fontWeight: '600',
+                top: 2,
+                color: 'white',
+                textAlign: 'center',
+              }}>
+              PLACE ORDER
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </>
+    </ErrorNetwork>
   );
 };
 
@@ -351,6 +412,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 7,
+    marginBottom: 60,
   },
   card: {
     flexDirection: 'row',
@@ -415,5 +477,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: '#000',
     padding: 15,
+  },
+  radioStyle: {
+    width: 50,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });

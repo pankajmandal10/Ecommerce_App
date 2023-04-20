@@ -103,11 +103,10 @@ export default function SplashScreen(props: SplashScreenProps) {
             justifyContent: 'center',
           }}>
           <Animated.Image
-            source={require('../../images/cake2.png')}
+            source={require('../../images/cakelicious.png')}
             style={{
-              width: 100,
-              height: 100,
-              marginBottom: 20,
+              width: 150,
+              height: 150,
               transform: [
                 {translateX: moveLogo.x},
                 {translateY: moveLogo.y},
@@ -122,7 +121,7 @@ export default function SplashScreen(props: SplashScreenProps) {
               color: 'white',
               transform: [{translateY: moveTitle.y}, {scale: scaleTitle}],
             }}>
-            Cake
+            Cakelicious
           </Animated.Text>
         </Animated.View>
       </Animated.View>

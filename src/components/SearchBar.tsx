@@ -7,7 +7,7 @@ import {
   FlatList,
   Text,
 } from 'react-native';
-import {vw, vh} from 'react-native-css-vh-vw';
+import {vh, vw} from 'react-native-expo-viewport-units';
 import {useAppDispatch, useAppSelector} from '../hokes';
 import {fetchSearchProducts} from '../store/redux/ProductSlice';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -33,6 +33,7 @@ const SearchBar = () => {
         onPress={() => {
           setSearchTerm(item.title);
           onItemPress();
+          setSearchTerm('');
         }}>
         <Text style={styles.item}>{item.title}</Text>
       </TouchableOpacity>
@@ -44,6 +45,7 @@ const SearchBar = () => {
       <View style={styles.container}>
         <TextInput
           placeholder="Search Products..."
+          placeholderTextColor="gray"
           style={styles.input}
           value={searchTerm}
           onChangeText={text => setSearchTerm(text)}
@@ -58,8 +60,12 @@ const SearchBar = () => {
             borderRadius: 30,
             alignItems: 'center',
           }}>
-          <AntDesign name="clockcircle" size={11} style={{marginRight: 6}} />
-          <Text>Search</Text>
+          <AntDesign
+            name="clockcircle"
+            size={11}
+            style={{marginRight: 6, color: 'gray'}}
+          />
+          <Text style={{color: 'gray'}}>Search</Text>
         </TouchableOpacity>
       </View>
       <View

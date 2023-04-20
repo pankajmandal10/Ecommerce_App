@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  Alert,
 } from 'react-native';
 import Colors from '../theme/Colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -20,6 +21,7 @@ import {
   updateCartItem,
 } from '../store/redux/addCartSlice';
 import CustomeLoading from '../components/common/CustomeLoading';
+import ErrorNetwork from '../components/common/ErrorNetwork';
 
 interface AddProductProps {
   navigation: any;
@@ -34,12 +36,12 @@ const Cart = ({route, navigation}: AddProductProps) => {
   }, []);
 
   const init = async () => {
-    let data = 0;
-    cart.forEach(element => {
-      data = data + element.updatedPrice;
-    });
-    console.warn(data);
-    setGrand(data);
+    // let data = 0;
+    // cart.forEach(element => {
+    //   data = data + element.updatedPrice;
+    // });
+    // console.warn(data);
+    // setGrand(data);
     const userId = await getAsyncItem('userId');
     await dispatch(fetchCartItems(userId));
   };
@@ -90,7 +92,10 @@ const Cart = ({route, navigation}: AddProductProps) => {
     return <Text>Something went wrong!</Text>;
   }
 
+  let grandValue = 0;
   const Item = ({item, index}) => {
+    grandValue += item.updatedPrice;
+    setGrand(grandValue);
     return (
       <View style={styles.container}>
         <View style={styles.cartDetails}>
@@ -109,9 +114,10 @@ const Cart = ({route, navigation}: AddProductProps) => {
             <View style={{flexDirection: 'row'}}>
               <View
                 style={{
-                  width: vh(13),
+                  // width: vh(13),
                   flexDirection: 'row',
                   alignSelf: 'baseline',
+                  alignContent: 'center',
                   padding: 2,
                   borderRadius: 3,
                   borderWidth: 1,
@@ -120,7 +126,8 @@ const Cart = ({route, navigation}: AddProductProps) => {
                 <TouchableOpacity
                   onPress={() => handleUpdatetItem(item, 'decrement')}
                   style={styles.touchableButton}>
-                  <Text style={styles.touchableTextStyle}>-</Text>
+                  <AntDesign name="minus" size={20} color="white" />
+                  {/* <Text style={styles.touchableTextStyle}>-</Text> */}
                 </TouchableOpacity>
                 <Text
                   style={{
@@ -133,12 +140,25 @@ const Cart = ({route, navigation}: AddProductProps) => {
                 <TouchableOpacity
                   onPress={() => handleUpdatetItem(item, 'increment')}
                   style={styles.touchableButton}>
-                  <Text style={styles.touchableTextStyle}>+</Text>
+                  <AntDesign name="plus" size={20} color="white" />
+                  {/* <Text style={styles.touchableTextStyle}>+</Text> */}
                 </TouchableOpacity>
               </View>
               <TouchableOpacity
                 onPress={() => {
-                  handleRemove(item);
+                  Alert.alert(
+                    'Alert',
+                    'Would you really like to remove this product?.',
+                    [
+                      {
+                        text: 'NO',
+                      },
+                      {
+                        text: 'YES',
+                        onPress: () => handleRemove(item),
+                      },
+                    ],
+                  );
                 }}
                 style={{
                   alignItems: 'center',
@@ -157,68 +177,70 @@ const Cart = ({route, navigation}: AddProductProps) => {
   };
 
   return (
-    <View style={{flex: 1}}>
-      {cart.length === 0 ? (
-        <View style={{width: '100%', flex: 1}}>
-          <EmptyCartScreen navigation={navigation} />
-        </View>
-      ) : (
-        <View style={{flex: 1}}>
-          <FlatList
-            data={cart}
-            renderItem={({item, index}) => Item({item, index})}
-            keyExtractor={(item, index) => String(index)}
-          />
-          <View
-            style={{
-              // position: 'absolute',
-              backgroundColor: Colors.DARK_SECONDRY_COLOR,
-              bottom: vh(0),
-              width: vw(100),
-              alignSelf: 'center',
-              padding: 10,
-              elevation: 9,
-            }}>
+    <ErrorNetwork>
+      <View style={{flex: 1}}>
+        {status === STATUSES.IDLE && cart.length === 0 ? (
+          <View style={{width: '100%', flex: 1}}>
+            <EmptyCartScreen navigation={navigation} />
+          </View>
+        ) : (
+          <View style={{flex: 1}}>
+            <FlatList
+              data={cart}
+              renderItem={({item, index}) => Item({item, index})}
+              keyExtractor={(item, index) => String(index)}
+            />
             <View
               style={{
-                flexDirection: 'row',
-                alignContent: 'center',
-                justifyContent: 'space-around',
+                // position: 'absolute',
+                backgroundColor: Colors.DARK_SECONDRY_COLOR,
+                bottom: vh(0),
+                width: vw(100),
+                alignSelf: 'center',
+                padding: 10,
+                elevation: 9,
               }}>
-              <Text style={styles.textStyle}>Grand Total</Text>
-              <Text style={styles.textStyle}>
-                Rs: {cart.length === 0 ? 0 : Math.round(grand)}
-              </Text>
-            </View>
-            <View
-              style={{
-                marginTop: 7,
-                flexDirection: 'row',
-                alignContent: 'center',
-                justifyContent: 'space-around',
-              }}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Homes')}
-                style={styles.buttonStyle}>
-                <Text style={{...styles.textStyle, textAlign: 'center'}}>
-                  Continue Shopping
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignContent: 'center',
+                  justifyContent: 'space-around',
+                }}>
+                <Text style={styles.textStyle}>Grand Total</Text>
+                <Text style={styles.textStyle}>
+                  Rs: {cart.length === 0 ? 0 : Math.round(grand)}
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={async () => {
-                  await setAsyncItem('grandTotal', grand);
-                  navigation.navigate('Order Details');
-                }}
-                style={styles.buttonStyle}>
-                <Text style={{...styles.textStyle, textAlign: 'center'}}>
-                  PLACE ORDER
-                </Text>
-              </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  marginTop: 7,
+                  flexDirection: 'row',
+                  alignContent: 'center',
+                  justifyContent: 'space-around',
+                }}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Homes')}
+                  style={styles.buttonStyle}>
+                  <Text style={{...styles.textStyle, textAlign: 'center'}}>
+                    Continue Shopping
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={async () => {
+                    await setAsyncItem('grandTotal', Math.round(grand));
+                    navigation.navigate('Orderdetails');
+                  }}
+                  style={styles.buttonStyle}>
+                  <Text style={{...styles.textStyle, textAlign: 'center'}}>
+                    PLACE ORDER
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      )}
-    </View>
+        )}
+      </View>
+    </ErrorNetwork>
   );
 };
 
@@ -247,9 +269,10 @@ const styles = StyleSheet.create({
     resizeMode: 'center',
   },
   touchableButton: {
-    width: vw(5),
+    // width: vw(5),
+    marginVertical: vh(0.4),
     borderRadius: 4,
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   touchableTextStyle: {
     fontSize: vw(5),

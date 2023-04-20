@@ -9,6 +9,8 @@ import SplashScreen from '../screens/splashScreen/Splash';
 import {getAsyncItem} from '../services';
 import MainScreen from './AppTabNavigator';
 import {useIsFocused} from '@react-navigation/native';
+import {useAppDispatch, useAppSelector} from '../hokes';
+import ErrorNetwork from '../components/common/ErrorNetwork';
 
 interface StackNavigationProps {
   props: any;
@@ -28,41 +30,47 @@ const StackNavigation = (props: StackNavigationProps) => {
   if (userCradential === null) {
     return (
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Splash"
-            options={{headerShown: false}}
-            component={SplashScreen}
-          />
-          <Stack.Screen name="SignIn_SingUp" component={SignIn_SingUp} />
-          <Stack.Screen
-            name="SignIn"
-            options={{headerShown: false}}
-            component={SignIn}
-          />
-          <Stack.Screen
-            name="SignUp"
-            options={{headerShown: false}}
-            component={SingUp}
-          />
-          <Stack.Screen
-            name="Main"
-            options={{headerShown: false}}
-            component={MainScreen}
-          />
-        </Stack.Navigator>
+        <ErrorNetwork>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Splash"
+              options={{headerShown: false}}
+              component={SplashScreen}
+            />
+            <Stack.Screen name="SignIn_SingUp" component={SignIn_SingUp} />
+            <Stack.Screen
+              name="SignIn"
+              options={{headerShown: false}}
+              component={SignIn}
+            />
+            <Stack.Screen
+              name="SignUp"
+              options={{headerShown: false}}
+              component={SingUp}
+            />
+            <Stack.Screen
+              name="Main"
+              options={{headerShown: false}}
+              component={MainScreen}
+            />
+          </Stack.Navigator>
+        </ErrorNetwork>
+        {/* {isConnected === false ? <ErrorNetwork /> : null} */}
       </NavigationContainer>
     );
   } else {
     return (
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Main"
-            options={{headerShown: false}}
-            component={MainScreen}
-          />
-        </Stack.Navigator>
+        <ErrorNetwork>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Main"
+              options={{headerShown: false}}
+              component={MainScreen}
+            />
+          </Stack.Navigator>
+        </ErrorNetwork>
+        {/* {isConnected === false ? <ErrorNetwork /> : null} */}
       </NavigationContainer>
     );
   }

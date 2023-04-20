@@ -11,12 +11,13 @@ import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Colors from '../../theme/Colors';
 import BottomSheet from '../BottomSheet';
 import {useAppDispatch, useAppSelector} from '../../hokes';
-import {signInPost, STATUSES} from '../../store/redux/UserSlice';
 import {vw, vh} from 'react-native-css-vh-vw';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import {StackActions} from '@react-navigation/native';
 import {setAsyncItem} from '../../services';
 import CustomeLoading from '../../components/common/CustomeLoading';
+import {STATUSES, signInPost} from '../../store/redux/UserSlice';
 
 interface SignInProps {
   navigation: any;
@@ -26,6 +27,7 @@ const SignIn = (props: SignInProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [forgotEmail, setForgotEmail] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useAppDispatch();
 
   // Retrieve the callback function name on the SignIn screen
@@ -37,9 +39,7 @@ const SignIn = (props: SignInProps) => {
     callback();
   }
 
-  const {loginUser: loginUser, status}: any = useAppSelector(
-    state => state.loginUser,
-  );
+  const {user: user, status}: any = useAppSelector(state => state.user);
   const {height} = useWindowDimensions();
   const bottomSheetRef: any = useRef();
 
@@ -71,17 +71,14 @@ const SignIn = (props: SignInProps) => {
   };
 
   if (status === STATUSES.LOADING) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          alignContent: 'center',
-          alignSelf: 'center',
-        }}>
-        <CustomeLoading />
-      </View>
-    );
+    return <CustomeLoading />;
   }
+
+  // if (isConnected === false) {
+  //   return <ErrorNetwork isNetworkConnected={isConnected} />;
+  // }
+
+  const toggleShowPassword = () => setShowPassword(!showPassword);
 
   return (
     <>
@@ -100,29 +97,48 @@ const SignIn = (props: SignInProps) => {
           <ScrollView>
             <Image
               style={styles.imageStyle}
-              source={require('../../images/cake2.png')}
+              source={require('../../images/cakelicious.png')}
             />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#EECDAB"
-              onChangeText={email => {
-                setEmail(email);
-              }}
-              value={email}
-              placeholder="Email id..."
-            />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#EECDAB"
-              placeholder="Password..."
-              autoCapitalize="none"
-              autoCorrect={false}
-              textContentType="newPassword"
-              secureTextEntry
-              value={password}
-              enablesReturnKeyAutomatically
-              onChangeText={password => setPassword(password)}
-            />
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholderTextColor="#EECDAB"
+                onChangeText={email => {
+                  // Remove spaces and commas from input text
+                  const formattedEmail: any = email.replace(/[\s,]/g, '');
+                  setEmail(formattedEmail);
+                }}
+                value={email}
+                placeholder="Email id..."
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholderTextColor="#EECDAB"
+                placeholder="Password..."
+                autoCapitalize="none"
+                autoCorrect={false}
+                textContentType="newPassword"
+                secureTextEntry={!showPassword}
+                value={password}
+                enablesReturnKeyAutomatically
+                onChangeText={password => {
+                  // Remove spaces and commas from input text
+                  const formattedPassword: any = password.replace(/[\s,]/g, '');
+                  setPassword(formattedPassword);
+                }}
+              />
+              <TouchableOpacity style={styles.icon}>
+                <MaterialIcons
+                  onPress={toggleShowPassword}
+                  name={showPassword ? 'visibility' : 'visibility-off'}
+                  size={24}
+                  color={Colors.WHITE}
+                />
+              </TouchableOpacity>
+            </View>
+
             <TouchableOpacity onPress={() => pressHandler()}>
               <Text style={styles.forgotPass}>Forgot Password?</Text>
             </TouchableOpacity>
@@ -180,15 +196,17 @@ const SignIn = (props: SignInProps) => {
           }}>
           <View style={styles.textContainer}>
             <Text style={styles.text}>Enter Your Email</Text>
-            <TextInput
-              style={{...styles.input, width: '100%', alignSelf: 'center'}}
-              placeholderTextColor="#EECDAB"
-              onChangeText={email => {
-                setForgotEmail(email);
-              }}
-              value={forgotEmail}
-              placeholder="Enter Email..."
-            />
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={{...styles.input, width: '100%', alignSelf: 'center'}}
+                placeholderTextColor="#EECDAB"
+                onChangeText={email => {
+                  setForgotEmail(email);
+                }}
+                value={forgotEmail}
+                placeholder="Enter Email..."
+              />
+            </View>
             <TouchableOpacity
               style={{...styles.touchableButton, alignSelf: 'center'}}
               onPress={() => props.navigation.navigate('SignUp')}>
@@ -201,6 +219,8 @@ const SignIn = (props: SignInProps) => {
           </View>
         </View>
       </BottomSheet>
+
+      {/* {isConnected === false ? <ErrorNetwork /> : null} */}
     </>
   );
 };
@@ -233,22 +253,16 @@ const styles = StyleSheet.create({
     // flex: 1,
   },
   input: {
-    height: 48,
-    marginHorizontal: 35,
-    marginVertical: 15,
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 15,
-    borderColor: Colors.WHITE,
-    color: 'white',
-    paddingRight: 25,
-    paddingLeft: 25,
+    flex: 1,
+    paddingVertical: 10,
+    fontSize: 16,
+    color: Colors.WHITE,
   },
   forgotPass: {
     textAlign: 'right',
     flexDirection: 'row-reverse',
     fontSize: 16,
-    color: 'white',
+    color: Colors.WHITE,
     marginLeft: 55,
   },
   buttonSignIn: {
@@ -334,12 +348,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: Colors.WHITE,
     borderWidth: 2,
-    padding: 10,
+    padding: 8,
     marginVertical: 10,
   },
   touchbleTextStyle: {
     color: Colors.WHITE,
-    fontSize: 18,
-    fontWeight: '800',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginVertical: 20,
+    marginHorizontal: 20,
+  },
+  icon: {
+    padding: 10,
   },
 });

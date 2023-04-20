@@ -25,6 +25,7 @@ export type CartItemStackPrams = {
   AddProduct: {
     name: string;
   };
+  Orderdetails: undefined;
   OrderDetails: {
     name: string;
   };

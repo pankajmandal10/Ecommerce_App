@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import {vw, vh} from 'react-native-css-vh-vw';
+import {vh, vw} from 'react-native-expo-viewport-units';
 import Colors from '../../theme/Colors';
 import {StackActions, useIsFocused} from '@react-navigation/native';
 
@@ -18,7 +18,7 @@ const SignIn_SingUp = (props: SignIn_SingUpProps) => {
     <View style={{...styles.container}}>
       <Image
         style={styles.imageStyle}
-        source={require('../../images/cake2.png')}
+        source={require('../../images/cakelicious.png')}
       />
       <Text style={styles.title}>Welcome to our store !</Text>
       <View
@@ -79,16 +79,16 @@ const styles = StyleSheet.create({
   },
   touchableButton: {
     width: vw(40),
-    borderRadius: 30,
+    borderRadius: 20,
     alignItems: 'center',
     borderColor: Colors.WHITE,
     borderWidth: 2,
-    padding: 10,
+    padding: 9,
     marginVertical: 10,
   },
   touchbleTextStyle: {
     color: Colors.WHITE,
-    fontSize: 18,
-    fontWeight: '800',
+    fontSize: 16,
+    fontWeight: '700',
   },
 });

@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
-import Button from '../../components/common/Button';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Colors from '../../theme/Colors';
 import {useAppDispatch, useAppSelector} from '../../hokes';
 import {STATUSES, signUpPost} from '../../store/redux/UserSlice';
@@ -25,6 +25,7 @@ const SignUp = (props: SignUpProps) => {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [address, setAddress] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   // Retrieve the callback function name on the SignIn screen
   const callbackName = props.navigation?.callback;
@@ -39,16 +40,7 @@ const SignUp = (props: SignUpProps) => {
   const {user: user, status}: any = useAppSelector(state => state.user);
 
   if (status === STATUSES.LOADING) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          alignContent: 'center',
-          alignSelf: 'center',
-        }}>
-        <CustomeLoading />
-      </View>
-    );
+    return <CustomeLoading />;
   }
   const handleToSignUp = async () => {
     if (
@@ -81,6 +73,8 @@ const SignUp = (props: SignUpProps) => {
     }
   };
 
+  const toggleShowPassword = () => setShowPassword(!showPassword);
+
   return (
     <View style={styles.container}>
       <Text
@@ -97,7 +91,7 @@ const SignUp = (props: SignUpProps) => {
         <ScrollView>
           <Image
             style={styles.imageStyle}
-            source={require('../../images/cake2.png')}
+            source={require('../../images/cakelicious.png')}
           />
           <TextInput
             style={styles.input}
@@ -112,7 +106,9 @@ const SignUp = (props: SignUpProps) => {
             style={styles.input}
             placeholderTextColor="#EECDAB"
             onChangeText={email => {
-              setEmail(email);
+              // Remove spaces and commas from input text
+              const formattedEmail: any = email.replace(/[\s,]/g, '');
+              setEmail(formattedEmail);
             }}
             value={email}
             placeholder="Enter Email Id..."
@@ -121,25 +117,46 @@ const SignUp = (props: SignUpProps) => {
             style={styles.input}
             placeholderTextColor="#EECDAB"
             onChangeText={phone => {
-              setPhone(phone);
+              // Remove spaces and commas from input text
+              const formattedPhone: any = phone.replace(/[\s,.]/g, '');
+              setPhone(formattedPhone);
             }}
             maxLength={10}
             value={phone}
             placeholder="Enter Phone..."
             keyboardType="number-pad"
           />
-          <TextInput
-            style={styles.input}
-            placeholderTextColor="#EECDAB"
-            placeholder="Enter Password..."
-            autoCapitalize="none"
-            autoCorrect={false}
-            textContentType="newPassword"
-            secureTextEntry
-            value={password}
-            enablesReturnKeyAutomatically
-            onChangeText={password => setPassword(password)}
-          />
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={{
+                flex: 1,
+                paddingVertical: 10,
+                fontSize: 16,
+                color: Colors.WHITE,
+              }}
+              placeholderTextColor="#EECDAB"
+              placeholder="Password..."
+              autoCapitalize="none"
+              autoCorrect={false}
+              textContentType="newPassword"
+              secureTextEntry={!showPassword}
+              value={password}
+              enablesReturnKeyAutomatically
+              onChangeText={password => {
+                // Remove spaces and commas from input text
+                const formattedPassword: any = password.replace(/[\s,]/g, '');
+                setPassword(formattedPassword);
+              }}
+            />
+            <TouchableOpacity style={styles.icon}>
+              <MaterialIcons
+                onPress={toggleShowPassword}
+                name={showPassword ? 'visibility' : 'visibility-off'}
+                size={24}
+                color={Colors.WHITE}
+              />
+            </TouchableOpacity>
+          </View>
           <TextInput
             style={styles.input}
             placeholderTextColor="#EECDAB"
@@ -217,7 +234,7 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     borderWidth: 1,
     padding: 10,
-    borderRadius: 15,
+    borderRadius: 10,
     borderColor: Colors.WHITE,
     color: 'white',
     paddingRight: 25,
@@ -252,12 +269,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: Colors.WHITE,
     borderWidth: 2,
-    padding: 10,
+    padding: 8,
     marginVertical: 10,
   },
   touchbleTextStyle: {
     color: Colors.WHITE,
-    fontSize: 18,
-    fontWeight: '800',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginVertical: 20,
+    marginHorizontal: 35,
+  },
+  icon: {
+    padding: 10,
   },
 });

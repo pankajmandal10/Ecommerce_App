@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import Colors from '../theme/Colors';
@@ -8,42 +8,32 @@ import HeaderTabs from '../components/HeaderTabs';
 import HomeMainCard from '../components/HomeMainCard';
 import Categories from '../components/Categories';
 import ItenList from '../components/ItemList';
+import ErrorNetwork from '../components/common/ErrorNetwork';
 
 // type Props = NativeStackScreenProps<RootStackParams, 'Home'>;
 
 const HomeScreen = ({navigation}: any) => {
-  const renderItem = ({item}) => (
-    <View
-      style={{
-        backgroundColor: 'white',
-        borderRadius: 5,
-        height: 250,
-        padding: 50,
-        marginLeft: 25,
-        marginRight: 25,
-      }}>
-      <Text style={{fontSize: 30}}>{item.title}</Text>
-    </View>
-  );
   return (
-    <View>
-      <View
-        style={{
-          width: '100%',
-          padding: 10,
-          backgroundColor: Colors.PRIMERY_COLOR,
-        }}>
-        <HeaderTabs />
-        <SearchBar />
-      </View>
-      <ScrollView style={{marginBottom: 120, zIndex: -1}}>
-        <HomeMainCard />
-        <View>
-          <Categories />
+    <ErrorNetwork>
+      <View>
+        <View
+          style={{
+            width: '100%',
+            padding: 10,
+            backgroundColor: Colors.PRIMERY_COLOR,
+          }}>
+          <HeaderTabs navigation={navigation} />
+          <SearchBar />
         </View>
-        <ItenList navigation={navigation} />
-      </ScrollView>
-    </View>
+        <ScrollView style={{marginBottom: 120, zIndex: -1}}>
+          <HomeMainCard />
+          <View>
+            <Categories />
+          </View>
+          <ItenList navigation={navigation} />
+        </ScrollView>
+      </View>
+    </ErrorNetwork>
   );
 };
 

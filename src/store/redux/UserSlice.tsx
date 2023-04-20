@@ -28,6 +28,15 @@ const UserSlice = createSlice({
       .addCase(signUpPost.rejected, (state: any, action: any) => {
         state.status = STATUSES.ERROR;
       })
+      .addCase(signInPost.pending, (state: any, action: any) => {
+        state.status = STATUSES.LOADING;
+      })
+      .addCase(signInPost.fulfilled, (state: any, action) => {
+        state.user = action.payload;
+      })
+      .addCase(signInPost.rejected, (state: any, action: any) => {
+        state.status = STATUSES.ERROR;
+      })
       .addCase(getLoggedUser.pending, (state: any, action: any) => {
         state.status = STATUSES.LOADING;
       })
@@ -36,27 +45,6 @@ const UserSlice = createSlice({
         state.status = STATUSES.IDLE;
       })
       .addCase(getLoggedUser.rejected, (state: any, action: any) => {
-        state.status = STATUSES.ERROR;
-      });
-  },
-});
-
-export const logInSclice = createSlice({
-  name: 'loginUser',
-  initialState: {
-    loginUser: [],
-    status: STATUSES.IDLE,
-  },
-  extraReducers: builder => {
-    builder
-      .addCase(signInPost.pending, (state: any, action: any) => {
-        state.status = STATUSES.LOADING;
-      })
-      .addCase(signInPost.fulfilled, (state: any, action) => {
-        state.singUpUser = action.payload;
-        state.status = STATUSES.IDLE;
-      })
-      .addCase(signInPost.rejected, (state: any, action: any) => {
         state.status = STATUSES.ERROR;
       });
   },
@@ -85,7 +73,7 @@ export const signUpPost = createAsyncThunk(
 );
 
 export const signInPost = createAsyncThunk(
-  'type/postData',
+  'signInPost/postData',
   async (userData, thunkAPI) => {
     console.warn(userData);
 

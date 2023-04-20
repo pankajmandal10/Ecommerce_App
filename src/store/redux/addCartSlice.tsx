@@ -53,9 +53,6 @@ export default addCartSlice.reducer;
 export const fetchCartItems = createAsyncThunk(
   'getaddetocartdata/fetch',
   async userId => {
-    console.warn(
-      `https://cackestoreapi.onrender.com/getaddetocartdata/${userId}`,
-    );
     const res = await fetch(
       `https://cackestoreapi.onrender.com/getaddetocartdata/${userId}`,
     );
@@ -99,21 +96,22 @@ export const updateCartItem = createAsyncThunk(
       price: Math.round(item.product.price),
       qty: 1,
     };
-    console.warn(data);
-    console.warn(
-      `https://cackestoreapi.onrender.com/updatequantity/${dataSource.action}/${dataSource.body.key}/${dataSource.body.userId}`,
-    );
-    axios
-      .put(
-        `https://cackestoreapi.onrender.com/updatequantity/${dataSource.action}/${dataSource.body.key}/${dataSource.body.userId}`,
-        data,
-      )
-      .then(response => {
-        console.log('Item updated successfully');
-      })
-      .catch(error => {
-        console.error('Error update item:', error);
-      });
+    console.warn(dataSource);
+    try {
+      axios
+        .put(
+          `https://cackestoreapi.onrender.com/updatequantity/${dataSource.action}/${dataSource.body.key}/${dataSource.body.userId}`,
+          data,
+        )
+        .then(response => {
+          console.log('Item updated successfully');
+        })
+        .catch(error => {
+          console.error('Error update item:', error);
+        });
+    } catch (error) {
+      alert(error);
+    }
   },
 );
 

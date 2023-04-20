@@ -34,7 +34,7 @@ const EmptyCartScreen = (props: EmptyCartScreenProps) => {
         YOUR SHOPPING CART IS EMPTY
       </Text>
       <Button
-        onPress={() => props.navigation.navigate('Home')}
+        onPress={() => props.navigation.navigate('Homes')}
         title="SHOP NOW"
         style={styles.button}
       />
