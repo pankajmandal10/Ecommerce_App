@@ -40,6 +40,7 @@ const MainScreen = () => {
           if (
             routeName === 'AddProduct' ||
             routeName === 'Orderdetails' ||
+            routeName === 'Seached Items' ||
             routeName === 'Details' ||
             routeName === 'Cart' ||
             routeName === 'My Cart' ||
@@ -47,7 +48,11 @@ const MainScreen = () => {
           ) {
             return {display: 'none'};
           }
-          return {backgroundColor: Colors.PRIMERY_COLOR, height: 45, bottom: 3};
+          return {
+            backgroundColor: Colors.PRIMERY_COLOR,
+            height: 45,
+            bottom: 3,
+          };
         })(route),
       })}>
       <RootStack.Screen

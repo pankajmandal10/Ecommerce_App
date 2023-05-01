@@ -19,10 +19,12 @@ interface StackNavigationProps {
 const Stack = createStackNavigator();
 const StackNavigation = (props: StackNavigationProps) => {
   const [userCradential, setUserCredential]: any = useState(null);
+
   const readItemFromStorage = async () => {
     const userCradential = await getAsyncItem('loginCredentials');
     setUserCredential(userCradential);
   };
+
   useEffect(() => {
     readItemFromStorage();
   }, []);

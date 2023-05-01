@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Text,
   View,
@@ -6,6 +6,8 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  ScrollView,
+  Animated,
 } from 'react-native';
 import Colors from '../theme/Colors';
 import Rating from './common/Rating';
@@ -17,42 +19,30 @@ import {
   fetchSearchProducts,
   STATUSES,
 } from '../store/redux/ProductSlice';
+import HomeMainCard from './HomeMainCard';
 import {addDetailsProduct} from '../store/redux/CartSlice';
 import CustomeLoading from './common/CustomeLoading';
-interface ItenListProps {
-  navigation: any;
-}
 
-const ItenList = (props: ItenListProps) => {
+const ItenList = (props: any) => {
   const [liked, setLiked] = useState(false);
   const [counter, setCounter] = useState(-2);
-
   const dispatch = useAppDispatch();
-  const {Searcheddata: products, status}: any = useAppSelector(
-    state => state.product,
+  const [selectedCategory, setSelectedCategory]: any = useState(
+    props.categoriesdData[0],
   );
 
-  useEffect(() => {
-    dispatch(fetchProducts());
-    dispatch(fetchSearchProducts(undefined));
-  }, []);
-
-  if (status === STATUSES.LOADING) {
-    return (
-      // <View
-      //   style={{
-      //     flex: 1,
-      //     alignContent: 'center',
-      //     alignSelf: 'center',
-      //   }}>
-      <CustomeLoading />
-      // </View>
-    );
-  }
-
-  if (status === STATUSES.ERROR) {
-    return <Text>Something went wrong!</Text>;
-  }
+  const handleCategoryPress = category => {
+    let data = category;
+    let dataSource = props.categoriesdData;
+    for (let i = 0; i < dataSource.length; i++) {
+      if (data.id == dataSource[i].id) {
+        data.status = true;
+      } else {
+        dataSource[i].status = false;
+      }
+    }
+    setSelectedCategory(category);
+  };
 
   const addFunc = (item: any) => {
     dispatch(addDetailsProduct(item));
@@ -61,27 +51,27 @@ const ItenList = (props: ItenListProps) => {
 
   const renderItem = ({item, index}) => (
     <View style={styles.contener}>
-      <TouchableOpacity onPress={() => addFunc(item)}>
-        <View style={styles.item}>
-          <TouchableOpacity
-            style={{
-              marginHorizontal: 8,
-              marginVertical: 2,
-            }}
+      <View style={styles.item}>
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 8,
+            marginVertical: 2,
+          }}
+          onPress={() => {
+            setLiked(!liked);
+            setCounter(index);
+          }}>
+          <AntDesign
+            name={liked && index == counter ? 'heart' : 'hearto'}
+            size={24}
+            color={liked && index == counter ? 'red' : 'white'}
             onPress={() => {
               setLiked(!liked);
               setCounter(index);
-            }}>
-            <AntDesign
-              name={liked && index == counter ? 'heart' : 'hearto'}
-              size={24}
-              color={liked && index == counter ? 'red' : 'white'}
-              onPress={() => {
-                setLiked(!liked);
-                setCounter(index);
-              }}
-            />
-          </TouchableOpacity>
+            }}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => addFunc(item)}>
           <Image style={styles.imageStyle} source={{uri: item.image}} />
           <View
             style={{
@@ -100,39 +90,145 @@ const ItenList = (props: ItenListProps) => {
               {item.price}
             </Text>
           </View>
-        </View>
-        <View style={styles.titleBar}>
-          <Text style={styles.title}>{item.title}</Text>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.titleBar}>
+        <Text style={styles.title}>{item.title}</Text>
+      </View>
     </View>
   );
 
+  const renderCategory = ({item, index}) => {
+    return (
+      <View
+        style={{
+          borderRadius: 40,
+          height: 90,
+          paddingVertical: 15,
+          backgroundColor: Colors.SECONDRY_COLOR,
+          padding: 10,
+          borderWidth: 2,
+          marginVertical: 6,
+          marginHorizontal: 7,
+          flex: 1,
+          borderColor: item.status ? 'yellow' : 'transparent',
+        }}>
+        {item.id == 0 ? (
+          <TouchableOpacity
+            onPress={() => handleCategoryPress(item)}
+            style={{
+              width: 50,
+              paddingVertical: 10,
+            }}>
+            <Text style={styles.titleStyle}>All</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={() => handleCategoryPress(item)}>
+            <Image style={styles.categoryImageStyle} source={item.image} />
+            <Text style={styles.categoryTitle}>{item.title}</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  };
+
+  const UpperComponent = () => {
+    return <HomeMainCard />;
+  };
+
   return (
-    <View style={{width: '100%'}}>
-      <FlatList
-        data={products}
-        numColumns={2}
-        renderItem={({item, index}) => renderItem({item, index})}
-        keyExtractor={(item, index) => String(index)}
+    <View style={{zIndex: -1, flex: 1}}>
+      <View style={{}}>
+        <FlatList
+          data={props.categoriesdData}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({item, index}) => renderCategory({item, index})}
+          keyExtractor={item => item.id.toString()}
+        />
+      </View>
+      <View>
+        <FlatList
+          data={selectedCategory.items}
+          keyExtractor={(item, index) => String(index)}
+          renderItem={renderItem}
+          numColumns={2}
+          columnWrapperStyle={styles.columnWrapper}
+          ListHeaderComponent={UpperComponent}
+          style={{marginBottom: 110}}
+        />
+      </View>
+      {/* </View> */}
+      {/* <FlatList
+        horizontal={true}
+        data={DATA}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
+          <TouchableOpacity onPress={() => handleCategoryPress(item)}>
+            <View style={styles.categoryCard}>
+              <Text>{item.title}</Text>
+            </View>
+          </TouchableOpacity>
+        )}
       />
+      <FlatList
+        data={selectedCategory.items}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
+          <View style={styles.itemCard}>
+            <Text>{item.title}</Text>
+          </View>
+        )}
+      /> */}
     </View>
   );
 };
 
-export default ItenList;
-
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 0,
+  },
+  categoryCard: {
+    height: 50,
+    width: 100,
+    margin: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'lightblue',
+    borderRadius: 10,
+  },
+  itemCard: {
+    height: 50,
+    margin: 10,
+    justifyContent: 'center',
+    backgroundColor: 'lightgreen',
+    borderRadius: 10,
+    color: 'red',
+  },
   contener: {
     width: vw(100),
     flexDirection: 'column',
     flex: 1,
+  },
+  card: {
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 20,
+    margin: 10,
+  },
+  card0: {
+    backgroundColor: '#fff',
+    padding: 20,
+    margin: 10,
+    borderRadius: 5,
   },
   titleBar: {
     flexDirection: 'column',
     marginBottom: 6,
     marginHorizontal: 8,
     justifyContent: 'space-around',
+    width: '95%',
   },
   title: {
     color: Colors.BLACK,
@@ -146,6 +242,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'tomato',
     margin: 2,
+    width: vw(48),
     backgroundColor: Colors.SECONDRY_COLOR,
   },
   imageStyle: {
@@ -160,4 +257,35 @@ const styles = StyleSheet.create({
   },
 
   flatlistContainer: {},
+
+  columnWrapper: {
+    flex: 1,
+    justifyContent: 'space-between',
+    marginHorizontal: 3,
+  },
+  item1: {
+    backgroundColor: '#fff',
+    padding: 20,
+    flex: 1,
+    borderRadius: 5,
+    margin: 10,
+  },
+  titleStyle: {
+    fontSize: 25,
+    color: Colors.WHITE,
+    textAlign: 'center',
+  },
+  categoryImageStyle: {
+    resizeMode: 'center',
+    width: 50,
+    height: 40,
+    flexDirection: 'row',
+  },
+  categoryTitle: {
+    fontSize: 10,
+    color: Colors.WHITE,
+    textAlign: 'center',
+  },
 });
+
+export default ItenList;

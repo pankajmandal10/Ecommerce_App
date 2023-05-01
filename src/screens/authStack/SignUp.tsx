@@ -40,7 +40,16 @@ const SignUp = (props: SignUpProps) => {
   const {user: user, status}: any = useAppSelector(state => state.user);
 
   if (status === STATUSES.LOADING) {
-    return <CustomeLoading />;
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignContent: 'center',
+          alignSelf: 'center',
+        }}>
+        <CustomeLoading />
+      </View>
+    );
   }
   const handleToSignUp = async () => {
     if (

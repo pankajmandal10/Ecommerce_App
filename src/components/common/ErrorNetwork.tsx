@@ -9,7 +9,7 @@ interface ErrorNetworkProps {
 }
 
 const ErrorNetwork = ({children}) => {
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnected, setIsConnected] = useState(true);
 
   useEffect(() => {
     init();
@@ -23,7 +23,6 @@ const ErrorNetwork = ({children}) => {
       unsubscribe();
     };
   };
-
   return (
     <View style={{flex: 1}}>
       {isConnected ? (

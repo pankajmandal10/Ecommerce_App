@@ -16,6 +16,7 @@ interface ProfileScreenProps {
 }
 
 const ProfileScreen = (props: ProfileScreenProps) => {
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   const readItemFromStorage = async () => {
     const savedUser = await getAsyncItem('loggedData');
@@ -27,8 +28,17 @@ const ProfileScreen = (props: ProfileScreenProps) => {
 
   const {user: user, status}: any = useAppSelector(state => state.user);
 
-  if (status === STATUSES.LOADING) {
-    return <CustomeLoading />;
+  if (status === STATUSES.LOADING || loading === true) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignContent: 'center',
+          alignSelf: 'center',
+        }}>
+        <CustomeLoading />
+      </View>
+    );
   }
 
   if (status === STATUSES.ERROR) {
@@ -36,6 +46,7 @@ const ProfileScreen = (props: ProfileScreenProps) => {
   }
 
   const handleSignOut = async () => {
+    setLoading(true);
     await AsyncStorage.removeItem('loginCredentials');
     props.navigation.dispatch(StackActions.replace('Main'));
   };

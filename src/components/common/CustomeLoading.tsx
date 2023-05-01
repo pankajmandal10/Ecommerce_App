@@ -60,11 +60,11 @@ class CustomeLoading extends Component {
     return (
       // <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <>
-        <BlurView style={styles.blur} blurType="light" blurAmount={1} />
-        <View style={{zIndex: 2, backgroundColor: 'light'}}>
-          <PacmanIndicator color={Colors.DARK_SECONDRY_COLOR} size={90} />
-        </View>
-        <BlurView style={styles.blur} blurType="light" blurAmount={1} />
+        {/* <BlurView style={styles.blur} blurType="light" blurAmount={1} /> */}
+        {/* <View style={{zIndex: 2, width: '100%', backgroundColor: 'gray'}}> */}
+        <PacmanIndicator color={Colors.DARK_SECONDRY_COLOR} size={90} />
+        {/* </View> */}
+        {/* <BlurView style={styles.blur} blurType="light" blurAmount={1} /> */}
       </>
       // </View>
     );

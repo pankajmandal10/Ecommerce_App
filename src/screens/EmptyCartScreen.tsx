@@ -2,6 +2,7 @@ import * as React from 'react';
 import {Text, View, StyleSheet, Image} from 'react-native';
 import Button from '../components/common/Button';
 import Colors from '../theme/Colors';
+import {TouchableOpacity} from 'react-native';
 
 interface EmptyCartScreenProps {
   navigation: any;
@@ -33,11 +34,17 @@ const EmptyCartScreen = (props: EmptyCartScreenProps) => {
         }}>
         YOUR SHOPPING CART IS EMPTY
       </Text>
-      <Button
-        onPress={() => props.navigation.navigate('Homes')}
-        title="SHOP NOW"
-        style={styles.button}
-      />
+      <TouchableOpacity
+        style={{
+          top: 40,
+          width: 150,
+          borderRadius: 3,
+          backgroundColor: Colors.SECONDRY_COLOR,
+          alignSelf: 'center',
+        }}
+        onPress={() => props.navigation.navigate('Homes')}>
+        <Text style={styles.item}>SHOP NOW</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -63,5 +70,11 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     backgroundColor: Colors.SECONDRY_COLOR,
     alignSelf: 'center',
+  },
+  item: {
+    padding: 10,
+    fontSize: 17,
+    color: 'white',
+    textAlign: 'center',
   },
 });

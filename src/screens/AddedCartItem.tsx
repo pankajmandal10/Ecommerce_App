@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
   Alert,
+  Button,
 } from 'react-native';
 import Colors from '../theme/Colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -22,6 +23,7 @@ import {
 } from '../store/redux/addCartSlice';
 import CustomeLoading from '../components/common/CustomeLoading';
 import ErrorNetwork from '../components/common/ErrorNetwork';
+import axios from 'axios';
 
 interface AddProductProps {
   navigation: any;

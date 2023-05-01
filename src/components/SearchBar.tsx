@@ -9,10 +9,17 @@ import {
 } from 'react-native';
 import {vh, vw} from 'react-native-expo-viewport-units';
 import {useAppDispatch, useAppSelector} from '../hokes';
-import {fetchSearchProducts} from '../store/redux/ProductSlice';
+import {
+  fetchSearchProducts,
+  fetchSearchedItems,
+} from '../store/redux/ProductSlice';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-const SearchBar = () => {
+interface SearchBarProps {
+  navigation: any;
+}
+
+const SearchBar = (props: SearchBarProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const dispatch = useAppDispatch();
   const {data: products, status}: any = useAppSelector(state => state.product);
@@ -23,19 +30,23 @@ const SearchBar = () => {
       )
     : null;
 
-  const onItemPress = async () => {
-    await dispatch(fetchSearchProducts(searchTerm));
+  const onItemPress = async item => {
+    await dispatch(fetchSearchedItems(item)).then(res => {
+      props.navigation.navigate('Seached Items', (item = {item}));
+    });
   };
   const renderItem = ({item, index}) => {
     return (
       <TouchableOpacity
         key={index}
         onPress={() => {
-          setSearchTerm(item.title);
-          onItemPress();
+          setSearchTerm(item);
+          onItemPress(item.title);
           setSearchTerm('');
         }}>
-        <Text style={styles.item}>{item.title}</Text>
+        <Text key={index} style={styles.item}>
+          {item.title}
+        </Text>
       </TouchableOpacity>
     );
   };
@@ -51,12 +62,12 @@ const SearchBar = () => {
           onChangeText={text => setSearchTerm(text)}
         />
         <TouchableOpacity
-          onPress={() => onItemPress()}
+          onPress={() => onItemPress(searchTerm)}
           style={{
             flexDirection: 'row',
             marginRight: 8,
             backgroundColor: 'white',
-            padding: 9,
+            padding: 5,
             borderRadius: 30,
             alignItems: 'center',
           }}>
@@ -102,7 +113,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: 55,
+    height: 50,
     marginLeft: 10,
   },
   icon: {
@@ -116,7 +127,7 @@ const styles = StyleSheet.create({
   },
   item: {
     padding: 10,
-    fontSize: 18,
+    fontSize: 17,
     color: 'black',
     flex: 1,
   },

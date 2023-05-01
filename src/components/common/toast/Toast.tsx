@@ -50,7 +50,7 @@ const Toast = ({showToast, message, type}: Props): JSX.Element => {
         type === ToastType.Top ? styles.topToastStyle : styles.bottomToastStyle,
         animatedStyle,
       ]}>
-      <View style={{flexDirection: 'row'}}>
+      <View style={{flexDirection: 'row', flex: 1, height: undefined}}>
         <AntDesign
           style={{}}
           name="checkcircle"
@@ -61,6 +61,7 @@ const Toast = ({showToast, message, type}: Props): JSX.Element => {
           style={{
             fontSize: 15,
             paddingHorizontal: 15,
+            textAlign: 'center',
             fontWeight: '500',
             color: 'white',
           }}>

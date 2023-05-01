@@ -18,6 +18,10 @@ import ProfileScreen from '../screens/ProfileScreen';
 import SignUp from '../screens/authStack/SignUp';
 import {createStackNavigator} from '@react-navigation/stack';
 import OrderSuccessfulScreen from '../screens/OrderSuccessfulScreen';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {TextInput, View} from 'react-native';
+import SearchedItems from '../screens/SearchedItems';
+import SearchField from './common/SearchField';
 
 const Stack = createStackNavigator();
 const ExploreStack = createNativeStackNavigator<ExploreStackParams>();
@@ -71,6 +75,14 @@ export const ExploreScreenStack = (props: any) => {
             <HeaderNavBar navigation={navigation} props={props} route={route} />
           ),
         })}
+      />
+      <Stack.Screen
+        name="Seached Items"
+        component={SearchedItems}
+        options={{headerShown: false}}
+        // options={{
+        //   headerTitle: () => <SearchField navigation={props.navigation} />,
+        // }}
       />
       <CartItemStack.Screen
         options={({navigation, route}) => ({
@@ -164,13 +176,13 @@ export const ProfileStacks = (props: any) => {
           fontWeight: 'bold',
         },
       }}>
-      <ProfileStack.Screen
-        name="Profile"
+      <Stack.Screen
         options={({navigation, route}) => ({
           header: props => (
             <HeaderNavBar navigation={navigation} props={props} route={route} />
           ),
         })}
+        name="Profile Details"
         component={ProfileScreen}
       />
       <ProfileStack.Screen

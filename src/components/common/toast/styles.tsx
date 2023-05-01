@@ -3,10 +3,12 @@ import Colors from '../../../theme/Colors';
 
 const styles = StyleSheet.create({
   commonToastStyle: {
-    height: 52,
+    height: undefined,
     backgroundColor: 'red',
     borderRadius: 8,
-    margin: 8,
+    marginLeft: 8,
+    marginRight: 8,
+    marginTop: 20,
     padding: 16,
     elevation: 4,
     shadowOffset: {

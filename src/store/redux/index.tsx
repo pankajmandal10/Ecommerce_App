@@ -10,6 +10,10 @@ export const store = configureStore({
     addcart: addCartSlice,
     product: productReducer,
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false, // disable serializableCheck
+    }),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

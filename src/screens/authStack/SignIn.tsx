@@ -24,6 +24,7 @@ interface SignInProps {
 }
 
 const SignIn = (props: SignInProps) => {
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [forgotEmail, setForgotEmail] = useState('');
@@ -70,8 +71,17 @@ const SignIn = (props: SignInProps) => {
     }
   };
 
-  if (status === STATUSES.LOADING) {
-    return <CustomeLoading />;
+  if (status === STATUSES.LOADING || loading === true) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignContent: 'center',
+          alignSelf: 'center',
+        }}>
+        <CustomeLoading />
+      </View>
+    );
   }
 
   // if (isConnected === false) {
@@ -159,6 +169,7 @@ const SignIn = (props: SignInProps) => {
                   backgroundColor: Colors.WHITE,
                 }}
                 onPress={() => {
+                  setLoading(true);
                   handleSignIn();
                 }}>
                 <Text

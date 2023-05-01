@@ -96,7 +96,6 @@ export const updateCartItem = createAsyncThunk(
       price: Math.round(item.product.price),
       qty: 1,
     };
-    console.warn(dataSource);
     try {
       axios
         .put(
