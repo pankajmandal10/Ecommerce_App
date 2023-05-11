@@ -1,44 +1,3 @@
-// import React, {useState, useEffect} from 'react';
-// import {
-//   SafeAreaView,
-//   FlatList,
-//   StyleSheet,
-//   Text,
-//   View,
-//   Image,
-//   ActivityIndicator,
-// } from 'react-native';
-// import Colors from '../../theme/Colors';
-// import Spinner from 'react-native-loading-spinner-overlay';
-// import {vw, vh} from 'react-native-css-vh-vw';
-
-// function CustomeLoading() {
-//   const [color, setColor] = useState('teal');
-//   return (
-//     <Spinner
-//       visible={true}
-//       overlayColor="rgba(0, 0, 0, 0.5)"
-//       textStyle={{color: '#222'}}
-//       color={Colors.SECONDRY_COLOR}
-//       animation="fade"
-//       size="large"
-//     />
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//   },
-//   imageStyle: {
-//     width: vw(35),
-//     height: vh(13),
-//     resizeMode: 'center',
-//   },
-// });
-
-// export default CustomeLoading;
-
 import React, {Component} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {BlurView} from '@react-native-community/blur';
@@ -68,6 +27,18 @@ class CustomeLoading extends Component {
       </>
       // </View>
     );
+  }
+}
+
+export class CustomeItemLoading extends Component {
+  render() {
+    return <MaterialIndicator color="yellow" size={26} />;
+  }
+}
+
+export class CustomeDotIndicatorLoading extends Component {
+  render() {
+    return <DotIndicator color="white" size={10} />;
   }
 }
 

@@ -5,7 +5,7 @@ import {StatusBar} from 'react-native';
 import Colors from './src/theme/Colors';
 
 const Stack = createStackNavigator();
-function App() {
+const App: React.FC = () => {
   return (
     <>
       <StatusBar
@@ -17,6 +17,6 @@ function App() {
       <MainNavigation props={undefined} navigation={''} />
     </>
   );
-}
+};
 
 export default App;

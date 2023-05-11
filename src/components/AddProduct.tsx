@@ -19,8 +19,15 @@ import {ToasterHelper} from 'react-native-customizable-toast';
 import Toast from './common/toast';
 import {ToastType} from './common/toast/common';
 import Button from './button';
-import {addToCartPost} from '../store/redux/addCartSlice';
-import {getAsyncItem} from '../services';
+import {
+  STATUSES,
+  addToCartPost,
+  fetchCartItems,
+} from '../store/redux/addCartSlice';
+import {getAsyncItem, setAsyncItem} from '../services';
+import {CustomeDotIndicatorLoading} from './common/CustomeLoading';
+import MyModal from './modal/MyModal';
+import {StackActions} from '@react-navigation/core';
 
 interface AddProductProps {
   navigation: any;
@@ -36,8 +43,10 @@ const AddProduct = (props: AddProductProps): JSX.Element => {
   const [showBottomToast, setShowBottomToast] = useState(false);
   const [showButtonType, setshowButtonType] = useState(false);
   const [userId, setUserId] = useState('');
+  // const [userCradential, setUserCradential] = useState();
 
   const {product: product, status}: any = useAppSelector(state => state.cart);
+  const data: any = useAppSelector(state => state.addcart);
   const dispatch = useAppDispatch();
 
   const windowHeight = Dimensions.get('window').height;
@@ -52,16 +61,18 @@ const AddProduct = (props: AddProductProps): JSX.Element => {
     init();
   }, []);
 
-  const handleAdd = (product: any) => {
+  const handleAdd = async () => {
+    await dispatch(fetchCartItems());
     props.navigation.navigate('My Cart');
   };
 
-  const onPressshowTopToast = (): void => {
-    setShowTopToast(!showTopToast);
+  const onBuyNow = async () => {
+    const data = {product: product, userId: userId};
+    await dispatch(addToCartPost(data));
+    props.navigation.navigate('My Cart');
   };
 
   const onPressShowBottomToast = (): void => {
-    // console.warn('product, userId', product, userId);
     const data = {product: product, userId: userId};
     setShowBottomToast(true);
     setshowButtonType(true);
@@ -71,14 +82,6 @@ const AddProduct = (props: AddProductProps): JSX.Element => {
     setTimeout(() => {
       setShowBottomToast(false);
     }, 3000);
-  };
-
-  const renderTopButtonLabel = (): string => {
-    return showTopToast ? 'Hide top toast' : 'Show top toast';
-  };
-
-  const renderBottomButtonLabel = (): string => {
-    return showBottomToast ? 'Hide bottom toast' : 'Show bottom toast';
   };
 
   return (
@@ -122,9 +125,9 @@ const AddProduct = (props: AddProductProps): JSX.Element => {
             columnGap: 1,
             backgroundColor: 'white',
           }}></View>
-
         <TouchableOpacity
           onPress={() => {
+            onBuyNow();
             setLiked(!liked);
             setCounter(0);
           }}
@@ -139,6 +142,7 @@ const AddProduct = (props: AddProductProps): JSX.Element => {
             size={24}
             color={liked && 0 == counter ? '#F50B5C' : 'white'}
             onPress={() => {
+              onBuyNow();
               setLiked(!liked);
               setCounter(0);
             }}

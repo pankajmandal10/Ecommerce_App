@@ -32,7 +32,7 @@ const SearchBar = (props: SearchBarProps) => {
 
   const onItemPress = async item => {
     await dispatch(fetchSearchedItems(item)).then(res => {
-      props.navigation.navigate('Seached Items', (item = {item}));
+      props.navigation.navigate('Searched Items', (item = {item}));
     });
   };
   const renderItem = ({item, index}) => {

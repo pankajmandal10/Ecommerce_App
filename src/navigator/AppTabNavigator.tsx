@@ -21,8 +21,7 @@ const MainScreen = () => {
     init();
   }, []);
   const init = async () => {
-    const userId = await getAsyncItem('userId');
-    await dispatch(fetchCartItems(userId));
+    await dispatch(fetchCartItems());
   };
   const {cart: cart}: any = useAppSelector(state => state.addcart);
 
@@ -36,15 +35,17 @@ const MainScreen = () => {
 
         tabBarStyle: (route => {
           const routeName = getFocusedRouteNameFromRoute(route) ?? '';
-          console.log(routeName);
           if (
             routeName === 'AddProduct' ||
             routeName === 'Orderdetails' ||
-            routeName === 'Seached Items' ||
+            routeName === 'Searched Items' ||
             routeName === 'Details' ||
             routeName === 'Cart' ||
             routeName === 'My Cart' ||
-            routeName === 'Order Successful'
+            routeName === 'Order Successful' ||
+            routeName === 'Messaging' ||
+            routeName === 'SignIn' ||
+            routeName === 'SignUp'
           ) {
             return {display: 'none'};
           }

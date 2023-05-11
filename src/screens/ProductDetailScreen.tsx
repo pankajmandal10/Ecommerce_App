@@ -1,25 +1,16 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useState} from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import Rating from '../components/common/Rating';
 import {ExploreStackParams} from '../route/Routing';
 import Colors from '../theme/Colors';
-import Button from '../components/common/Button';
 import AddProduct from '../components/AddProduct';
 import {vh, vw} from 'react-native-expo-viewport-units';
 import {useAppSelector} from '../hokes';
-// import {Ionicons, AntDesign} from '@expo/vector-icons';
-// import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ErrorNetwork from '../components/common/ErrorNetwork';
+import Button from '../components/button/Button';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 type Props = NativeStackScreenProps<ExploreStackParams, 'Details'>;
 
@@ -29,15 +20,203 @@ interface ProductDetailScreenProps {
 }
 
 const ProductDetailScreen = ({route, navigation}: ProductDetailScreenProps) => {
-  const [colorId, setColorId] = useState(1);
+  const [colorId, setColorId] = useState(0);
+  const [checkBox, setCheckBox] = useState(-1);
+  const [checkStatus, setCheckStatus] = useState(false);
   const [liked, setLiked] = useState(false);
   const [counter, setCounter] = useState(-1);
   const {product: product, status}: any = useAppSelector(state => state.cart);
   const data: any = product;
-
+  const [otherCate, setOtherCate] = useState(product.price);
   const onPress = async (id: number) => {
     setColorId(id);
   };
+
+  const cakeButtonList = [
+    {id: 0, title: '0.5kg'},
+    {id: 1, title: '1kg'},
+    {id: 2, title: '2kg'},
+    {id: 3, title: '3kg'},
+    {id: 4, title: '4kg'},
+    {id: 5, title: '5kg'},
+  ];
+
+  const coldDrinkButtonList = [
+    {id: 0, title: '200 ML'},
+    {id: 2, title: '500 ML'},
+    {id: 3, title: '1 L'},
+    {id: 4, title: '1.5 L'},
+    {id: 5, title: '2 L'},
+    {id: 6, title: '2.5 L'},
+  ];
+
+  const otherCategOptionButtonList = [
+    {id: 0, title: 'King Fries', pries: 130},
+    {id: 1, title: 'Medium Fries', pries: 150},
+    {id: 2, title: 'Cheesy Fries', pries: 160},
+    {id: 3, title: 'Boneless Fries', pries: 170},
+  ];
+
+  // for Cake
+  const renderOptionButton = (category: Object) => {
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          margin: 4,
+        }}>
+        <View
+          style={{
+            flex: 1,
+          }}>
+          <Text style={{fontSize: vw(6), color: Colors.BLACK_OPACITY_7}}>
+            {category == 'Cake' ? 'Weight' : null}
+          </Text>
+        </View>
+        <View
+          style={{
+            flex: 3,
+            flexDirection: 'row',
+            width: 'auto',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+          }}>
+          {(category == 'Cake' ? cakeButtonList : coldDrinkButtonList).map(
+            item => {
+              return (
+                <Button
+                  title={item.title}
+                  onPress={() => onPress(item.id)}
+                  style={{
+                    ...styles.touchableButton,
+                    backgroundColor:
+                      colorId === item.id
+                        ? Colors.SECONDRY_COLOR
+                        : Colors.WHITE,
+                  }}
+                  titleStyle={{
+                    ...styles.touchbleTextStyle,
+                    color: colorId === item.id ? Colors.WHITE : Colors.BLACK,
+                  }}
+                />
+              );
+            },
+          )}
+        </View>
+      </View>
+    );
+  };
+
+  // for Other Categories
+  const renderOtherCateOption = () => {
+    return (
+      <View
+        style={{
+          marginTop: 7,
+          justifyContent: 'center',
+          alignSelf: 'center',
+        }}>
+        <Text style={{fontSize: 19, color: 'black'}}>
+          Choose Your Sides
+          <Text style={{fontSize: 15, color: 'gray'}}>(Optional)</Text>
+        </Text>
+        {otherCategOptionButtonList.map(item => {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                setOtherCate(product.price + item.pries);
+                setCheckBox(item.id);
+                setCheckStatus(true);
+              }}
+              style={{
+                flexDirection: 'row',
+                marginVertical: 10,
+                // paddingHorizontal: 40,
+              }}>
+              <MaterialIcons
+                name={
+                  checkStatus
+                    ? checkBox === item.id
+                      ? 'check-box'
+                      : 'check-box-outline-blank'
+                    : 'check-box-outline-blank'
+                }
+                size={24}
+                color="black"
+              />
+              <Text
+                style={{fontSize: 15, color: 'black', paddingHorizontal: 15}}>
+                {item.title}
+              </Text>
+              <Text
+                style={{fontSize: 15, color: 'gray', paddingHorizontal: 15}}>
+                Rs: {item.pries}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    );
+  };
+
+  const renderOptionSelectionOfProduct = () => {
+    return (
+      <>
+        {product.category == 'Cake' || product.category == 'Colddrink'
+          ? renderOptionButton(product.category)
+          : renderOtherCateOption()}
+      </>
+    );
+  };
+
+  let totalAmount = product.price;
+  const renderCalculateAmount = () => {
+    totalAmount =
+      product.category == 'Colddrink'
+        ? colorId == 0
+          ? totalAmount
+          : colorId == 1
+          ? totalAmount * (10 / 100) + totalAmount
+          : colorId == 2
+          ? totalAmount * (15 / 100) + totalAmount
+          : colorId == 3
+          ? totalAmount * (20 / 100) + totalAmount
+          : colorId == 4
+          ? totalAmount * (25 / 100) + totalAmount
+          : colorId == 5
+          ? totalAmount * (30 / 100) + totalAmount
+          : colorId == 6
+          ? totalAmount * (40 / 100) + totalAmount
+          : totalAmount
+        : product.category == 'Cake'
+        ? colorId == 0
+          ? totalAmount
+          : colorId == 1
+          ? totalAmount * (75 / 100) + totalAmount
+          : colorId == 2
+          ? totalAmount * (120 / 100) + totalAmount
+          : colorId == 3
+          ? totalAmount * (200 / 100) + totalAmount
+          : colorId == 4
+          ? totalAmount * (380 / 100) + totalAmount
+          : colorId == 5
+          ? totalAmount * (450 / 100) + totalAmount
+          : totalAmount
+        : otherCate;
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignContent: 'center',
+        }}>
+        <Text style={{fontSize: vw(9), color: Colors.BLACK}}>
+          {Math.round(totalAmount)}
+        </Text>
+      </View>
+    );
+  };
+
   return (
     <ErrorNetwork>
       <View style={styles.container}>
@@ -85,16 +264,7 @@ const ProductDetailScreen = ({route, navigation}: ProductDetailScreenProps) => {
             flexDirection: 'row',
             margin: 4,
           }}>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignContent: 'center',
-            }}>
-            <Text style={{fontSize: vw(9), color: Colors.BLACK}}>
-              {Math.round(data.price)}
-            </Text>
-          </View>
+          {renderCalculateAmount()}
           <View
             style={{
               flex: 3,
@@ -108,128 +278,16 @@ const ProductDetailScreen = ({route, navigation}: ProductDetailScreenProps) => {
                   color: 'black',
                   textDecorationLine: 'line-through',
                 }}>
-                ₹ 350
+                ₹ {Math.round((totalAmount * 35) / 100 + totalAmount)}
               </Text>
-              <Text style={{color: 'green'}}> (15% OFF)</Text>
+              <Text style={{color: 'green'}}> (35% OFF)</Text>
             </View>
             <Text style={{fontSize: 14, color: 'black'}}>
               Inclusive all taxes
             </Text>
           </View>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            margin: 4,
-          }}>
-          <View
-            style={{
-              flex: 1,
-            }}>
-            <Text style={{fontSize: vw(6), color: Colors.BLACK_OPACITY_7}}>
-              Weight :
-            </Text>
-          </View>
-          <View
-            style={{
-              flex: 3,
-              flexDirection: 'row',
-              width: 'auto',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-            }}>
-            <TouchableOpacity
-              style={{
-                ...styles.touchableButton,
-                backgroundColor:
-                  colorId === 1 ? Colors.SECONDRY_COLOR : Colors.WHITE,
-              }}
-              onPress={() => onPress(1)}>
-              <Text
-                style={{
-                  ...styles.touchbleTextStyle,
-                  color: colorId === 1 ? Colors.WHITE : Colors.BLACK,
-                }}>
-                0.5Kg
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                ...styles.touchableButton,
-                backgroundColor:
-                  colorId === 2 ? Colors.SECONDRY_COLOR : Colors.WHITE,
-              }}
-              onPress={() => onPress(2)}>
-              <Text
-                style={{
-                  ...styles.touchbleTextStyle,
-                  color: colorId === 2 ? Colors.WHITE : Colors.BLACK,
-                }}>
-                1Kg
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                ...styles.touchableButton,
-                backgroundColor:
-                  colorId === 3 ? Colors.SECONDRY_COLOR : Colors.WHITE,
-              }}
-              onPress={() => onPress(3)}>
-              <Text
-                style={{
-                  ...styles.touchbleTextStyle,
-                  color: colorId === 3 ? Colors.WHITE : Colors.BLACK,
-                }}>
-                2Kg
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                ...styles.touchableButton,
-                backgroundColor:
-                  colorId === 4 ? Colors.SECONDRY_COLOR : Colors.WHITE,
-              }}
-              onPress={() => onPress(4)}>
-              <Text
-                style={{
-                  ...styles.touchbleTextStyle,
-                  color: colorId === 4 ? Colors.WHITE : Colors.BLACK,
-                }}>
-                3Kg
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                ...styles.touchableButton,
-                backgroundColor:
-                  colorId === 5 ? Colors.SECONDRY_COLOR : Colors.WHITE,
-              }}
-              onPress={() => onPress(5)}>
-              <Text
-                style={{
-                  ...styles.touchbleTextStyle,
-                  color: colorId === 5 ? Colors.WHITE : Colors.BLACK,
-                }}>
-                4Kg
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                ...styles.touchableButton,
-                backgroundColor:
-                  colorId === 6 ? Colors.SECONDRY_COLOR : Colors.WHITE,
-              }}
-              onPress={() => onPress(6)}>
-              <Text
-                style={{
-                  ...styles.touchbleTextStyle,
-                  color: colorId === 6 ? Colors.WHITE : Colors.BLACK,
-                }}>
-                5Kg
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        {renderOptionSelectionOfProduct()}
         <AddProduct navigation={navigation} route={route} />
       </View>
     </ErrorNetwork>
@@ -332,7 +390,7 @@ const styles = StyleSheet.create({
   },
   touchbleTextStyle: {
     color: Colors.BLACK,
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });

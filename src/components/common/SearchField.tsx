@@ -29,25 +29,9 @@ const SearchField = (props: SearchFieldProps) => {
       )
     : null;
 
-  // console.warn('filteredData', filteredData);
-
   const onItemPress = async item => {
     dispatch(fetchSearchedItems(item));
   };
-
-  // console.warn(SearchedItems.status === 'loading');
-  // if (SearchedItems.status === 'loading') {
-  //   return (
-  //     <View
-  //       style={{
-  //         flex: 1,
-  //         alignContent: 'center',
-  //         alignSelf: 'center',
-  //       }}>
-  //       <CustomeLoading />
-  //     </View>
-  //   );
-  // }
 
   const renderItem = ({item, index}) => {
     return (

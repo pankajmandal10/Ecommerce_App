@@ -1,20 +1,40 @@
-import React from 'react';
-import {Text, ViewStyle} from 'react-native';
-import {RectButton} from 'react-native-gesture-handler';
-import styles from './styles';
+import React, {FC, ReactNode} from 'react';
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+} from 'react-native';
 
-interface Props {
+interface ButtonProps {
+  title: string;
   onPress: () => void;
-  label: string;
-  customStyle?: ViewStyle | undefined;
+  style?: StyleProp<ViewStyle>;
+  titleStyle?: StyleProp<TextStyle>;
 }
 
-const Button = ({onPress, label, customStyle = {}}: Props): JSX.Element => {
+const Button: FC<ButtonProps> = ({title, onPress, style, titleStyle}) => {
   return (
-    <RectButton style={[styles.button, customStyle]} onPress={onPress}>
-      <Text>{label}</Text>
-    </RectButton>
+    <TouchableOpacity style={style} onPress={onPress}>
+      <Text style={titleStyle}>{title}</Text>
+    </TouchableOpacity>
   );
 };
-
 export default Button;
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: '#blue',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+});

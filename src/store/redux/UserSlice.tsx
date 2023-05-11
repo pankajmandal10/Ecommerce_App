@@ -57,9 +57,6 @@ export default UserSlice.reducer;
 export const signUpPost = createAsyncThunk(
   'type/postData',
   async (userData, thunkAPI) => {
-    console.warn(userData);
-    console.warn('https://cackestoreapi.onrender.com/signup');
-
     try {
       const response = await axios.post(
         'https://cackestoreapi.onrender.com/signup',
@@ -75,14 +72,11 @@ export const signUpPost = createAsyncThunk(
 export const signInPost = createAsyncThunk(
   'signInPost/postData',
   async (userData, thunkAPI) => {
-    console.warn(userData);
-
     try {
       const response = await axios.post(
         'https://cackestoreapi.onrender.com/signin',
         userData,
       );
-      console.warn(response.data);
       await setAsyncItem('loggedData', response.data);
       await setAsyncItem('userId', response.data.savedUser._id);
       return response.data;

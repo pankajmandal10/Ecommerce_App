@@ -1,15 +1,23 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {StackActions} from '@react-navigation/core';
 import React, {useEffect, useState} from 'react';
-import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Button,
+} from 'react-native';
 import {vw, vh} from 'react-native-css-vh-vw';
-import Button from '../components/common/Button';
 import CustomeLoading from '../components/common/CustomeLoading';
 import {useAppDispatch, useAppSelector} from '../hokes';
 import {getAsyncItem} from '../services';
 import {getLoggedUser, STATUSES} from '../store/redux/UserSlice';
 import Colors from '../theme/Colors';
 import ErrorNetwork from '../components/common/ErrorNetwork';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MyModal from '../components/modal/MyModal';
 
 interface ProfileScreenProps {
   navigation: any;
@@ -17,6 +25,8 @@ interface ProfileScreenProps {
 
 const ProfileScreen = (props: ProfileScreenProps) => {
   const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [logOutVisible, setLogOutVisible] = useState(false);
   const dispatch = useAppDispatch();
   const readItemFromStorage = async () => {
     const savedUser = await getAsyncItem('loggedData');
@@ -42,14 +52,77 @@ const ProfileScreen = (props: ProfileScreenProps) => {
   }
 
   if (status === STATUSES.ERROR) {
-    return <Text>Something went wrong!</Text>;
+    return (
+      <Text
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignSelf: 'center',
+          fontWeight: 'bold',
+          fontSize: 20,
+          color: 'tomato',
+        }}>
+        Something went wrong!
+      </Text>
+    );
   }
 
   const handleSignOut = async () => {
     setLoading(true);
     await AsyncStorage.removeItem('loginCredentials');
-    props.navigation.dispatch(StackActions.replace('Main'));
+    setLogOutVisible(false);
+    // props.navigation.StackActions.replace('SignIn');
+    props.navigation.dispatch(StackActions.replace('SignIn'));
   };
+
+  const handleClose = () => {
+    setVisible(false);
+  };
+
+  const handleLogOut = () => {
+    handleSignOut();
+  };
+
+  const renderLogOutDialogBox = () => {
+    return (
+      <MyModal
+        visible={logOutVisible}
+        onClose={() => setLogOutVisible(false)}
+        animationType="fade">
+        <Text style={{fontSize: 18, color: 'black'}}>
+          Are sure you want to log out...!
+        </Text>
+        <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setLogOutVisible(false)}>
+            <Text style={styles.closeButtonText}>NO</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{...styles.closeButton, backgroundColor: 'tomato'}}
+            onPress={handleLogOut}>
+            <Text style={styles.closeButtonText}>YES</Text>
+          </TouchableOpacity>
+        </View>
+      </MyModal>
+    );
+  };
+
+  const renderDialogBox = () => {
+    return (
+      // <View style={{flex: 1, width: 200, height: 200}}>
+      <MyModal visible={visible} onClose={handleClose} animationType="fade">
+        <Text style={{fontSize: 18, color: 'black'}}>
+          Feature will be available soon...!
+        </Text>
+        <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+          <Text style={styles.closeButtonText}>OK</Text>
+        </TouchableOpacity>
+      </MyModal>
+      // </View>
+    );
+  };
+
   return (
     <ErrorNetwork>
       <>
@@ -94,15 +167,29 @@ const ProfileScreen = (props: ProfileScreenProps) => {
             ONLINE ORDERING
           </Text>
           <View style={{width: '100%'}}>
-            <Text
+            <View
               style={{
-                fontSize: 18,
-                paddingHorizontal: 5,
+                flexDirection: 'row',
                 marginVertical: 10,
-                color: 'black',
+                justifyContent: 'space-between',
               }}>
-              Order History
-            </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: 'black',
+                }}>
+                Order History
+              </Text>
+              <TouchableOpacity
+                onPress={() => setVisible(true)}
+                style={{paddingHorizontal: 10}}>
+                <MaterialIcons
+                  name="arrow-forward-ios"
+                  size={20}
+                  color="black"
+                />
+              </TouchableOpacity>
+            </View>
             <View
               style={{
                 width: '100%',
@@ -144,10 +231,12 @@ const ProfileScreen = (props: ProfileScreenProps) => {
           }}>
           <TouchableOpacity
             style={styles.touchableButton}
-            onPress={() => handleSignOut()}>
+            onPress={() => setLogOutVisible(true)}>
             <Text style={styles.touchbleTextStyle}>Log out</Text>
           </TouchableOpacity>
         </View>
+        {renderDialogBox()}
+        {renderLogOutDialogBox()}
       </>
     </ErrorNetwork>
   );
@@ -201,5 +290,19 @@ const styles = StyleSheet.create({
     color: Colors.WHITE,
     fontSize: 16,
     fontWeight: '700',
+  },
+  closeButton: {
+    backgroundColor: Colors.PRIMERY_COLOR,
+    padding: 10,
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginTop: 20,
+    color: 'white',
+    width: 90,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

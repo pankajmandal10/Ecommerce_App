@@ -31,11 +31,11 @@ const HeaderTabs = (props: HeaderTabsProps) => {
         }}>
         <TouchableOpacity onPress={() => props.navigation.navigate('Profile')}>
           <Ionicons
-            style={{
-              elevation: 50,
-              borderRadius: 100,
-              backgroundColor: Colors.PRIMERY_COLOR,
-            }}
+            // style={{
+            //   elevation: 50,
+            //   borderRadius: 100,
+            //   backgroundColor: Colors.PRIMERY_COLOR,
+            // }}
             name="person-circle-outline"
             size={42}
             color="#443C17"

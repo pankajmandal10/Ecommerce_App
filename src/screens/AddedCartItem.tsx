@@ -21,9 +21,13 @@ import {
   STATUSES,
   updateCartItem,
 } from '../store/redux/addCartSlice';
-import CustomeLoading from '../components/common/CustomeLoading';
+import CustomeLoading, {
+  CustomeItemLoading,
+} from '../components/common/CustomeLoading';
 import ErrorNetwork from '../components/common/ErrorNetwork';
 import axios from 'axios';
+import {StackActions} from '@react-navigation/core';
+import MyModal from '../components/modal/MyModal';
 
 interface AddProductProps {
   navigation: any;
@@ -32,29 +36,26 @@ interface AddProductProps {
 
 const Cart = ({route, navigation}: AddProductProps) => {
   const [grand, setGrand] = useState(0);
-
-  useEffect(() => {
-    init();
-  }, []);
-
-  const init = async () => {
-    // let data = 0;
-    // cart.forEach(element => {
-    //   data = data + element.updatedPrice;
-    // });
-    // console.warn(data);
-    // setGrand(data);
-    const userId = await getAsyncItem('userId');
-    await dispatch(fetchCartItems(userId));
-  };
-
+  const [productId, setProductId] = useState('');
+  const [visible, setVisible] = useState(false);
+  const dispatch = useAppDispatch();
   const {
     cart: cart,
     grandTotal: grandTotal,
     status,
   }: any = useAppSelector(state => state.addcart);
 
-  const dispatch = useAppDispatch();
+  // const [cart, setCartData] = useState(cart);
+  // console.warn('ct', cart);
+
+  useEffect(() => {
+    init();
+  }, []);
+
+  const init = async () => {
+    await dispatch(fetchCartItems());
+  };
+
   const handleRemove = async (item: any) => {
     await dispatch(deleteAddCartItem({uId: item.userId, pId: item.key})).then(
       res => {
@@ -64,6 +65,7 @@ const Cart = ({route, navigation}: AddProductProps) => {
   };
 
   const handleUpdatetItem = async (item: any, action: any) => {
+    setProductId(item._id);
     const dataSource = {
       body: item,
       action: action,
@@ -77,18 +79,36 @@ const Cart = ({route, navigation}: AddProductProps) => {
     }
   };
 
-  if (status === STATUSES.LOADING) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          alignContent: 'center',
-          alignSelf: 'center',
-        }}>
-        <CustomeLoading />
-      </View>
-    );
-  }
+  const renderItemLoader = item => {
+    if (status === STATUSES.LOADING && item._id === productId) {
+      return (
+        <View
+          style={{
+            flex: 1,
+            position: 'absolute',
+            justifyContent: 'center',
+            alignContent: 'center',
+            alignSelf: 'center',
+            marginHorizontal: 34,
+          }}>
+          <CustomeItemLoading />
+        </View>
+      );
+    }
+  };
+
+  // if (status === STATUSES.LOADING) {
+  //   return (
+  //     <View
+  //       style={{
+  //         flex: 1,
+  //         alignContent: 'center',
+  //         alignSelf: 'center',
+  //       }}>
+  //       <CustomeLoading />
+  //     </View>
+  //   );
+  // }
 
   if (status === STATUSES.ERROR) {
     return <Text>Something went wrong!</Text>;
@@ -131,6 +151,7 @@ const Cart = ({route, navigation}: AddProductProps) => {
                   <AntDesign name="minus" size={20} color="white" />
                   {/* <Text style={styles.touchableTextStyle}>-</Text> */}
                 </TouchableOpacity>
+                {renderItemLoader(item)}
                 <Text
                   style={{
                     fontSize: 20,
@@ -175,6 +196,27 @@ const Cart = ({route, navigation}: AddProductProps) => {
           </View>
         </View>
       </View>
+    );
+  };
+
+  const handleClose = () => {
+    navigation.dispatch(StackActions.replace('SignIn'));
+    setVisible(false);
+  };
+
+  const renderDialogBox = () => {
+    return (
+      <MyModal
+        visible={visible}
+        onClose={() => setVisible(false)}
+        animationType="fade">
+        <Text style={{fontSize: 18, color: 'black'}}>
+          You are not logged in please login to procced...!
+        </Text>
+        <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+          <Text style={styles.closeButtonText}>Log In</Text>
+        </TouchableOpacity>
+      </MyModal>
     );
   };
 
@@ -229,8 +271,17 @@ const Cart = ({route, navigation}: AddProductProps) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={async () => {
-                    await setAsyncItem('grandTotal', Math.round(grand));
-                    navigation.navigate('Orderdetails');
+                    const userCradential = await getAsyncItem(
+                      'loginCredentials',
+                    );
+                    userCradential === null
+                      ? setVisible(true)
+                      : await setAsyncItem(
+                          'grandTotal',
+                          Math.round(grand),
+                        ).then(res => {
+                          navigation.navigate('Orderdetails');
+                        });
                   }}
                   style={styles.buttonStyle}>
                   <Text style={{...styles.textStyle, textAlign: 'center'}}>
@@ -242,6 +293,7 @@ const Cart = ({route, navigation}: AddProductProps) => {
           </View>
         )}
       </View>
+      {renderDialogBox()}
     </ErrorNetwork>
   );
 };
@@ -287,5 +339,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 4,
     borderColor: Colors.WHITE,
+  },
+  closeButton: {
+    backgroundColor: Colors.PRIMERY_COLOR,
+    padding: 10,
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginTop: 20,
+    color: 'white',
+    width: 90,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

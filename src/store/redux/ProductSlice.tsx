@@ -126,9 +126,6 @@ export const productSearchByCategory = createAsyncThunk(
   async productName => {
     let name = productName;
     let itemName = name == undefined ? '' : name;
-    // console.warn(
-    //   `https://cackestoreapi.onrender.com/api/productSearchByCategory?category=${itemName}`,
-    // );
     const res = await fetch(
       `https://cackestoreapi.onrender.com/api/productSearchByCategory?category=${itemName}`,
     );

@@ -84,10 +84,6 @@ const SignIn = (props: SignInProps) => {
     );
   }
 
-  // if (isConnected === false) {
-  //   return <ErrorNetwork isNetworkConnected={isConnected} />;
-  // }
-
   const toggleShowPassword = () => setShowPassword(!showPassword);
 
   return (
@@ -169,7 +165,6 @@ const SignIn = (props: SignInProps) => {
                   backgroundColor: Colors.WHITE,
                 }}
                 onPress={() => {
-                  setLoading(true);
                   handleSignIn();
                 }}>
                 <Text

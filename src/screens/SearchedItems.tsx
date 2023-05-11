@@ -34,6 +34,23 @@ const SearchedItems = (props: SearchedItemsProps) => {
     props.navigation.navigate('Details');
   };
 
+  if (status == STATUSES.LOADING) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignContent: 'center',
+          alignSelf: 'center',
+          // position: 'absolute',
+          height: 650,
+          zIndex: 2,
+        }}>
+        <CustomeLoading />
+      </View>
+    );
+  }
+
   const renderItem = ({item, index}) => (
     <View style={styles.contener}>
       <View style={styles.item}>
@@ -85,39 +102,41 @@ const SearchedItems = (props: SearchedItemsProps) => {
 
   return (
     <>
-      <View style={styles.container}>
-        <View
-        // style={{
-        //   width: '100%',
-        //   backgroundColor: 'gray',
-        //   flex: 1,
-        //   justifyContent: 'center',
-        //   alignContent: 'center',
-        // }}
-        >
-          <SearchField navigation={props.navigation} />
-        </View>
-        {status !== STATUSES.LOADING ? null : (
-          <View
-            style={{
-              justifyContent: 'center',
-              alignContent: 'center',
-              alignSelf: 'center',
-              position: 'absolute',
-              height: 650,
-            }}>
-            <CustomeLoading />
-          </View>
-        )}
-        <View style={{margin: 5, zIndex: -1}}>
-          <FlatList
-            data={products}
-            keyExtractor={(item, index) => String(index)}
-            renderItem={renderItem}
-            numColumns={2}
-          />
-        </View>
+      {/* <View style={styles.container}> */}
+      <View
+      // style={{
+      //   width: '100%',
+      //   backgroundColor: 'gray',
+      //   flex: 1,
+      //   justifyContent: 'center',
+      //   alignContent: 'center',
+      // }}
+      >
+        <SearchField navigation={props.navigation} />
       </View>
+      {/* {status !== STATUSES.LOADING ? null : (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignContent: 'center',
+            alignSelf: 'center',
+            // position: 'absolute',
+            height: 650,
+            zIndex: 2,
+          }}>
+          <CustomeLoading />
+        </View>
+      )} */}
+      <View style={{margin: 5, zIndex: -1}}>
+        <FlatList
+          data={products}
+          keyExtractor={(item, index) => String(index)}
+          renderItem={renderItem}
+          numColumns={2}
+        />
+      </View>
+      {/* </View> */}
     </>
   );
 };

@@ -22,6 +22,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {TextInput, View} from 'react-native';
 import SearchedItems from '../screens/SearchedItems';
 import SearchField from './common/SearchField';
+import ChatWithCustomer from '../screens/chatfeature/ChatScreen';
+import SignIn_SingUp from '../screens/authStack/SignIn_SignUp';
+import SignIn from '../screens/authStack/SignIn';
 
 const Stack = createStackNavigator();
 const ExploreStack = createNativeStackNavigator<ExploreStackParams>();
@@ -77,7 +80,7 @@ export const ExploreScreenStack = (props: any) => {
         })}
       />
       <Stack.Screen
-        name="Seached Items"
+        name="Searched Items"
         component={SearchedItems}
         options={{headerShown: false}}
         // options={{
@@ -101,6 +104,15 @@ export const ExploreScreenStack = (props: any) => {
         })}
         name="Order Successful"
         component={OrderSuccessfulScreen}
+      />
+      <Stack.Screen
+        options={({navigation, route}) => ({
+          header: props => (
+            <HeaderNavBar navigation={navigation} props={props} route={route} />
+          ),
+        })}
+        name="Messaging"
+        component={ChatWithCustomer}
       />
     </ExploreStack.Navigator>
   );
@@ -148,7 +160,7 @@ export const AddedCartItemStack = (props: any) => {
         name="Orderdetails"
         component={OrderDetails}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         options={({navigation, route}) => ({
           header: props => (
             <HeaderNavBar navigation={navigation} props={props} route={route} />
@@ -156,7 +168,7 @@ export const AddedCartItemStack = (props: any) => {
         })}
         name="Order Successful"
         component={OrderSuccessfulScreen}
-      />
+      /> */}
     </CartItemStack.Navigator>
   );
 };
@@ -188,6 +200,17 @@ export const ProfileStacks = (props: any) => {
       <ProfileStack.Screen
         options={{headerShown: false}}
         name="Signup"
+        component={SignUp}
+      />
+      <Stack.Screen name="SignIn_SingUp" component={SignIn_SingUp} />
+      <Stack.Screen
+        name="SignIn"
+        options={{headerShown: false}}
+        component={SignIn}
+      />
+      <Stack.Screen
+        name="SignUp"
+        options={{headerShown: false}}
         component={SignUp}
       />
     </ProfileStack.Navigator>

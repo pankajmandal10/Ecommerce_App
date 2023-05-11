@@ -54,14 +54,20 @@ const ItenList = (props: any) => {
       <View style={styles.item}>
         <TouchableOpacity
           style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignContent: 'center',
+            width: 30,
             marginHorizontal: 8,
             marginVertical: 2,
+            // backgroundColor: 'black',
           }}
           onPress={() => {
             setLiked(!liked);
             setCounter(index);
           }}>
           <AntDesign
+            style={{alignSelf: 'center'}}
             name={liked && index == counter ? 'heart' : 'hearto'}
             size={24}
             color={liked && index == counter ? 'red' : 'white'}
@@ -110,15 +116,15 @@ const ItenList = (props: any) => {
           borderWidth: 2,
           marginVertical: 6,
           marginHorizontal: 7,
-          flex: 1,
+          // flex: 1,
           borderColor: item.status ? 'yellow' : 'transparent',
         }}>
         {item.id == 0 ? (
           <TouchableOpacity
             onPress={() => handleCategoryPress(item)}
             style={{
-              width: 50,
-              paddingVertical: 10,
+              width: 45,
+              paddingVertical: 12,
             }}>
             <Text style={styles.titleStyle}>All</Text>
           </TouchableOpacity>
@@ -155,31 +161,9 @@ const ItenList = (props: any) => {
           numColumns={2}
           columnWrapperStyle={styles.columnWrapper}
           ListHeaderComponent={UpperComponent}
-          style={{marginBottom: 110}}
+          style={{marginBottom: 105}}
         />
       </View>
-      {/* </View> */}
-      {/* <FlatList
-        horizontal={true}
-        data={DATA}
-        keyExtractor={item => item.id}
-        renderItem={({item}) => (
-          <TouchableOpacity onPress={() => handleCategoryPress(item)}>
-            <View style={styles.categoryCard}>
-              <Text>{item.title}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
-      <FlatList
-        data={selectedCategory.items}
-        keyExtractor={item => item.id}
-        renderItem={({item}) => (
-          <View style={styles.itemCard}>
-            <Text>{item.title}</Text>
-          </View>
-        )}
-      /> */}
     </View>
   );
 };

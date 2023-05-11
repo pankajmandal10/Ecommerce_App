@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {getAsyncItem, setAsyncItem} from '../../services';
 
 const {createSlice, createAsyncThunk} = require('@reduxjs/toolkit');
 
@@ -52,11 +53,13 @@ export default addCartSlice.reducer;
 // Thunks
 export const fetchCartItems = createAsyncThunk(
   'getaddetocartdata/fetch',
-  async userId => {
+  async () => {
+    const userId = await getAsyncItem('userId');
     const res = await fetch(
       `https://cackestoreapi.onrender.com/getaddetocartdata/${userId}`,
     );
     const data = await res.json();
+    await setAsyncItem('cartDataInLocalStorage', data);
     return data;
   },
 );

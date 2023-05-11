@@ -16,17 +16,20 @@ import {
   fetchSearchProducts,
 } from '../store/redux/ProductSlice';
 import CustomeLoading from '../components/common/CustomeLoading';
+import {getAsyncItem, setAsyncItem} from '../services';
+import ChatIcon from './chatfeature/ChatIcon';
 
 // type Props = NativeStackScreenProps<RootStackParams, 'Home'>;
 
 const HomeScreen = ({navigation}: any) => {
   const dispatch = useAppDispatch();
   const [categoriesdDataSource, setCategoriesdDataSource]: any = useState([]);
+  const [loadingStatus, setLoadingStatus] = useState(false);
 
   const products: any = useAppSelector(state => state.product);
   useEffect(() => {
     init();
-  }, []);
+  }, [dispatch]);
 
   const init = async () => {
     await dispatch(fetchProducts());
@@ -96,9 +99,11 @@ const HomeScreen = ({navigation}: any) => {
     return (
       <Text
         style={{
+          flex: 1,
+          justifyContent: 'center',
           textAlign: 'center',
           fontWeight: 'bold',
-          fontSize: 25,
+          fontSize: 20,
           color: 'tomato',
         }}>
         Something went wrong!
@@ -120,6 +125,7 @@ const HomeScreen = ({navigation}: any) => {
       {categoriesdData[0].items.length === 0 ? null : (
         <ItenList navigation={navigation} categoriesdData={categoriesdData} />
       )}
+      <ChatIcon navigation={navigation} />
     </ErrorNetwork>
   );
 };
