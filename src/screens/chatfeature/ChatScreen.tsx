@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Colors from '../../theme/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {currentDate, currentDateTime} from '../../services';
 
 interface Message {
   text: string;
@@ -21,29 +22,22 @@ const ChatScreen: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
 
-  var now = new Date();
-  var hours = now.getHours();
-  var minutes = now.getMinutes();
-  var period = hours >= 12 ? 'PM' : 'AM'; // Determine if it's AM or PM
-
-  // Convert to 12-hour format
-  hours = hours % 12;
-  hours = hours ? hours : 12; // Handle midnight (0 hours)
-
-  var time: any =
-    hours + ':' + (minutes < 10 ? '0' + minutes : minutes) + ' ' + period;
-  console.log(time);
-
   const handleSend = () => {
     if (inputText.trim() === '') return;
 
-    const newMessage: Message = {
+    const userMessage: Message = {
       text: inputText.trim(),
       isSystemMessage: false,
-      timestamp: time,
+      timestamp: currentDate,
     };
 
-    setMessages([...messages, newMessage]);
+    const systemReply: Message = {
+      text: getSystemReply(inputText.trim()), // Call a function to generate the system reply based on the user input
+      isSystemMessage: true,
+      timestamp: currentDate,
+    };
+
+    setMessages([...messages, userMessage, systemReply]);
     setInputText('');
   };
 
@@ -51,7 +45,7 @@ const ChatScreen: React.FC = () => {
     const systemMessage: Message = {
       text,
       isSystemMessage: true,
-      timestamp: time,
+      timestamp: currentDate,
     };
 
     setMessages([...messages, systemMessage]);
@@ -60,9 +54,36 @@ const ChatScreen: React.FC = () => {
   // Send a welcome message as the first system message
   useEffect(() => {
     sendSystemMessage(
-      'Hey there, I am herre to help you with any queries you have to make your gifting experience super cool. Hit me up!',
+      'Hey there, I am here to help you with any queries you have to make your gifting experience super cool. Hit me up!',
     );
   }, []);
+
+  const getSystemReply = (userMessage: string): string => {
+    switch (userMessage.toLowerCase()) {
+      case 'hello':
+        return 'Hi! How can I help you today?';
+      case 'hi':
+        return 'Hello! How can I help you today?';
+      case 'how are you':
+        return 'I am an AI, so I do not have feelings, but thank you for asking!';
+      case 'who are you?':
+        return 'I am an AI, And Here i am to help you !';
+      case 'who are you':
+        return 'I am an AI, And Here i am to help you !';
+      case 'how are you?':
+        return 'I am an AI, so I do not have feelings, but thank you for asking!';
+      case 'goodbye':
+        return 'Goodbye! Have a great day!';
+      case 'good bye':
+        return 'Goodbye! Have a great day!';
+      case 'bye':
+        return 'Bye! Have a great day!';
+      case 'good':
+        return 'Thank you so much!';
+      default:
+        return 'I apologize, but I am unable to understand your query. Could you please rephrase or ask a different question?';
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -109,6 +130,7 @@ const ChatScreen: React.FC = () => {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
+          placeholderTextColor="#36454F"
           placeholder="Type your message..."
           value={inputText}
           onChangeText={setInputText}
@@ -195,6 +217,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginRight: 10,
     paddingHorizontal: 10,
+    color: '#36454F',
   },
   sendButton: {
     backgroundColor: 'blue',

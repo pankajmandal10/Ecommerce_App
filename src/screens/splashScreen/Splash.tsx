@@ -41,7 +41,7 @@ export default function SplashScreen(props: SplashScreenProps) {
       Animated.parallel([
         Animated.timing(startAnimation, {
           // For same Height for non safe Area Devices...
-          toValue: -Dimensions.get('window').height + (edges.top + 35),
+          toValue: -Dimensions.get('window').height + (edges.top + 45),
           useNativeDriver: true,
         }),
         Animated.timing(scaleLogo, {

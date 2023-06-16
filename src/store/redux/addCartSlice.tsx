@@ -120,6 +120,7 @@ export const updateCartItem = createAsyncThunk(
 export const deleteAddCartItem = createAsyncThunk(
   'deleteproduct/fetch',
   async ({uId, pId}) => {
+    console.warn(uId, pId);
     axios
       .delete(`https://cackestoreapi.onrender.com/deleteproduct/${uId}/${pId}`)
       .then(response => {

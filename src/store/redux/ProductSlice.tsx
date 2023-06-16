@@ -1,3 +1,6 @@
+import axios from 'axios';
+import {getAsyncItem} from '../../services';
+
 const {createSlice, createAsyncThunk} = require('@reduxjs/toolkit');
 
 export const STATUSES = Object.freeze({
@@ -18,6 +21,7 @@ const ProductSlice = createSlice({
     fries: [],
     sandwich: [],
     colddrink: [],
+    orderedItemGet: [],
     status: STATUSES.IDLE,
   },
   extraReducers: builder => {
@@ -74,6 +78,16 @@ const ProductSlice = createSlice({
         state.status = STATUSES.IDLE;
       })
       .addCase(fetchSearchedItems.rejected, (state, action) => {
+        state.status = STATUSES.ERROR;
+      })
+      .addCase(orderedItemGet.pending, (state, action) => {
+        state.status = STATUSES.LOADING;
+      })
+      .addCase(orderedItemGet.fulfilled, (state, action) => {
+        state.orderedItemGet = action.payload;
+        state.status = STATUSES.IDLE;
+      })
+      .addCase(orderedItemGet.rejected, (state, action) => {
         state.status = STATUSES.ERROR;
       });
   },
@@ -153,5 +167,60 @@ export const addToCartPost = createAsyncThunk(
       // this is the main part. Use the response property from the error object
       return error.response;
     }
+  },
+);
+
+export const orderedItemPost = createAsyncThunk(
+  'type/orderedItemPost',
+  async cart => {
+    try {
+      const userId = await getAsyncItem('userId');
+      let response = await fetch(
+        `https://cackestoreapi.onrender.com/api/v1/orderedPorduct/${userId}`,
+        {
+          method: 'POST',
+          mode: 'cors',
+          body: JSON.stringify(cart),
+          headers: {'Content-Type': 'application/json'},
+        },
+      );
+      // let user = response.json();
+      // return user;
+    } catch (error) {
+      // this is the main part. Use the response property from the error object
+      return error.response;
+    }
+  },
+);
+
+export const orderedItemGet = createAsyncThunk(
+  'orderedItemGet/fetch',
+  async () => {
+    const userId = await getAsyncItem('userId');
+    const res = await fetch(
+      `https://cackestoreapi.onrender.com/api/v1/orderedPorductGet/${userId}`,
+    );
+    const data = await res.json();
+    return data;
+  },
+);
+
+export const checkoutOrderedItem = createAsyncThunk(
+  'checkoutOrderedItem/fetch',
+  async () => {
+    const userId = await getAsyncItem('userId');
+    console.warn(
+      `https://cackestoreapi.onrender.com/api/v1/checkoutOrdered/${userId}`,
+    );
+    axios
+      .delete(
+        `https://cackestoreapi.onrender.com/api/v1/checkoutOrdered/${userId}`,
+      )
+      .then(response => {
+        console.log('Item deleted successfully');
+      })
+      .catch(error => {
+        console.error('Error deleting item:', error);
+      });
   },
 );

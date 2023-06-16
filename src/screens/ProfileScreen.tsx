@@ -8,12 +8,13 @@ import {
   Image,
   TouchableOpacity,
   Button,
+  TextInput,
 } from 'react-native';
 import {vw, vh} from 'react-native-css-vh-vw';
 import CustomeLoading from '../components/common/CustomeLoading';
 import {useAppDispatch, useAppSelector} from '../hokes';
 import {getAsyncItem} from '../services';
-import {getLoggedUser, STATUSES} from '../store/redux/UserSlice';
+import {getLoggedUser, STATUSES, userUpdate} from '../store/redux/UserSlice';
 import Colors from '../theme/Colors';
 import ErrorNetwork from '../components/common/ErrorNetwork';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -26,6 +27,9 @@ interface ProfileScreenProps {
 const ProfileScreen = (props: ProfileScreenProps) => {
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [addressVisible, setAddressVisible] = useState(false);
+  const [address, setAddress] = useState('');
+  const [showUpdate, setShowUpdate] = useState(false);
   const [logOutVisible, setLogOutVisible] = useState(false);
   const dispatch = useAppDispatch();
   const readItemFromStorage = async () => {
@@ -123,6 +127,92 @@ const ProfileScreen = (props: ProfileScreenProps) => {
     );
   };
 
+  const renderDialogAddressBox = () => {
+    return (
+      <MyModal
+        visible={addressVisible}
+        onClose={() => setAddressVisible(false)}
+        animationType="fade">
+        {/* <View style={styles.dialogBGStyle}> */}
+
+        {!showUpdate ? (
+          <>
+            <View>
+              <Text
+                style={{
+                  fontSize: 17,
+                  color: '#000',
+                  fontWeight: '600',
+                  padding: 6,
+                }}>
+                Address Details :
+              </Text>
+              <MaterialIcons
+                onPress={() => setShowUpdate(true)}
+                style={{
+                  position: 'absolute',
+                  flex: 1,
+                  alignSelf: 'flex-end',
+                  top: 0,
+                  padding: 7,
+                }}
+                name="edit"
+                size={22}
+                color="tomato"
+              />
+            </View>
+            <View
+              style={{
+                // width: '45%',
+                justifyContent: 'center',
+                alignSelf: 'center',
+              }}>
+              <Text style={{fontSize: 16, paddingHorizontal: 5, color: 'gray'}}>
+                {user.address}
+              </Text>
+            </View>
+          </>
+        ) : (
+          <View style={styles.dialogStyle}>
+            <Text style={styles.modalTextStyle}>Update Address</Text>
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#222"
+              onChangeText={address => {
+                setAddress(address);
+              }}
+              value={address}
+              placeholder="Enter address..."
+            />
+            <TouchableOpacity
+              onPress={async () => {
+                let data = {id: user._id, address: {address}};
+                address === ''
+                  ? alert('Enter the address')
+                  : await dispatch(userUpdate(data)).then(response => {
+                      readItemFromStorage();
+                      setAddressVisible(false);
+                      setAddress('');
+                    });
+              }}
+              style={{
+                top: 10,
+                padding: 10,
+                width: 100,
+                borderRadius: 3,
+                backgroundColor: Colors.SECONDRY_COLOR,
+              }}>
+              <Text style={{textAlign: 'center', color: Colors.WHITE}}>
+                Update
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {/* </View> */}
+      </MyModal>
+    );
+  };
+
   return (
     <ErrorNetwork>
       <>
@@ -181,7 +271,7 @@ const ProfileScreen = (props: ProfileScreenProps) => {
                 Order History
               </Text>
               <TouchableOpacity
-                onPress={() => setVisible(true)}
+                onPress={() => props.navigation.navigate('My Order')}
                 style={{paddingHorizontal: 10}}>
                 <MaterialIcons
                   name="arrow-forward-ios"
@@ -197,12 +287,34 @@ const ProfileScreen = (props: ProfileScreenProps) => {
                 marginVertical: 10,
                 backgroundColor: 'red',
               }}></View>
-            <Text style={{fontSize: 18, paddingHorizontal: 5, color: 'black'}}>
-              My address
-            </Text>
-            <Text style={{fontSize: 16, paddingHorizontal: 5, color: 'gray'}}>
-              {user.address}
-            </Text>
+            <View style={{width: '100%'}}>
+              <Text
+                style={{fontSize: 18, paddingHorizontal: 5, color: 'black'}}>
+                My address
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginVertical: 10,
+                  justifyContent: 'space-between',
+                }}>
+                <Text
+                  style={{fontSize: 16, paddingHorizontal: 5, color: 'gray'}}>
+                  {user.address}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setShowUpdate(false), setAddressVisible(true);
+                  }}
+                  style={{paddingHorizontal: 10}}>
+                  <MaterialIcons
+                    name="arrow-forward-ios"
+                    size={20}
+                    color="black"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
             <View
               style={{
                 width: '100%',
@@ -238,6 +350,7 @@ const ProfileScreen = (props: ProfileScreenProps) => {
         {renderDialogBox()}
         {renderLogOutDialogBox()}
       </>
+      {renderDialogAddressBox()}
     </ErrorNetwork>
   );
 };
@@ -304,5 +417,39 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    marginHorizontal: 30,
+    borderRadius: 7,
+    borderColor: Colors.PRIMERY_COLOR,
+    color: '#222',
+    width: 200,
+    margin: 5,
+    paddingHorizontal: 5,
+    justifyContent: 'flex-start',
+  },
+  dialogBGStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000000AA',
+    padding: 40,
+    height: undefined,
+  },
+  dialogStyle: {
+    width: '100%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // padding: 34,
+    // elevation: 3,
+  },
+  modalTextStyle: {
+    fontSize: 17,
+    color: '#000',
+    fontWeight: '600',
+    padding: 15,
   },
 });

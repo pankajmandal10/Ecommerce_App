@@ -46,7 +46,6 @@ const Cart = ({route, navigation}: AddProductProps) => {
   }: any = useAppSelector(state => state.addcart);
 
   // const [cart, setCartData] = useState(cart);
-  // console.warn('ct', cart);
 
   useEffect(() => {
     init();
@@ -119,7 +118,7 @@ const Cart = ({route, navigation}: AddProductProps) => {
     grandValue += item.updatedPrice;
     setGrand(grandValue);
     return (
-      <View style={styles.container}>
+      <View key={index} style={styles.container}>
         <View style={styles.cartDetails}>
           <Image style={styles.imageStyle} source={{uri: item.product.image}} />
           <View

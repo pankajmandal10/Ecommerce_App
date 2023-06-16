@@ -88,22 +88,23 @@ const SignUp = (props: SignUpProps) => {
     <View style={styles.container}>
       <Text
         style={{
-          paddingVertical: 10,
+          // paddingVertical: 10,
           textAlign: 'center',
           fontSize: 24,
           fontWeight: 'bold',
           color: 'white',
         }}>
-        SignUp
+        Sign Up
       </Text>
       <View style={styles.container1}>
-        <ScrollView>
-          <Image
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* <Image
             style={styles.imageStyle}
             source={require('../../images/cakelicious.png')}
-          />
+          /> */}
           <TextInput
             style={styles.input}
+            selectionColor="white"
             placeholderTextColor="#EECDAB"
             onChangeText={name => {
               setName(name);
@@ -113,6 +114,7 @@ const SignUp = (props: SignUpProps) => {
           />
           <TextInput
             style={styles.input}
+            selectionColor="white"
             placeholderTextColor="#EECDAB"
             onChangeText={email => {
               // Remove spaces and commas from input text
@@ -124,6 +126,7 @@ const SignUp = (props: SignUpProps) => {
           />
           <TextInput
             style={styles.input}
+            selectionColor="white"
             placeholderTextColor="#EECDAB"
             onChangeText={phone => {
               // Remove spaces and commas from input text
@@ -135,14 +138,25 @@ const SignUp = (props: SignUpProps) => {
             placeholder="Enter Phone..."
             keyboardType="number-pad"
           />
+          <TextInput
+            style={styles.input}
+            selectionColor="white"
+            placeholderTextColor="#EECDAB"
+            onChangeText={address => {
+              setAddress(address);
+            }}
+            value={address}
+            placeholder="Enter Address..."
+          />
           <View style={styles.inputContainer}>
             <TextInput
               style={{
                 flex: 1,
-                paddingVertical: 10,
+                paddingVertical: 0,
                 fontSize: 16,
                 color: Colors.WHITE,
               }}
+              selectionColor="white"
               placeholderTextColor="#EECDAB"
               placeholder="Password..."
               autoCapitalize="none"
@@ -166,44 +180,73 @@ const SignUp = (props: SignUpProps) => {
               />
             </TouchableOpacity>
           </View>
-          <TextInput
-            style={styles.input}
-            placeholderTextColor="#EECDAB"
-            onChangeText={address => {
-              setAddress(address);
-            }}
-            value={address}
-            placeholder="Enter Address..."
-          />
           <View
             style={{
-              flexDirection: 'row',
-              alignSelf: 'center',
+              flex: 1,
+              flexDirection: 'column',
               justifyContent: 'space-between',
-              width: '100%',
-              marginVertical: 10,
-              flexWrap: 'wrap',
-              paddingHorizontal: 25,
             }}>
-            <TouchableOpacity
+            <View
               style={{
-                ...styles.touchableButton,
-                backgroundColor: Colors.WHITE,
-              }}
-              onPress={() => handleToSignUp()}>
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignContent: 'center',
+              }}>
+              <TouchableOpacity
+                style={{
+                  ...styles.touchableButton,
+                  backgroundColor: Colors.WHITE,
+                }}
+                onPress={() => handleToSignUp()}>
+                <Text
+                  style={{
+                    ...styles.touchbleTextStyle,
+                    color: Colors.BLACK,
+                  }}>
+                  SIGN UP
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignContent: 'center',
+                marginVertical: 10,
+              }}>
+              <View style={styles.orLine}></View>
+              <Text style={styles.touchbleTextStyle}>OR</Text>
+              <View style={styles.orLine}></View>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'flex-end',
+              }}>
               <Text
                 style={{
-                  ...styles.touchbleTextStyle,
-                  color: Colors.BLACK,
+                  fontSize: 16,
+                  textAlign: 'center',
+                  color: '#36454F',
+                  paddingHorizontal: 7,
                 }}>
-                Sign Up
+                Already Have an Account?
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.touchableButton}
-              onPress={() => props.navigation.navigate('SignIn')}>
-              <Text style={styles.touchbleTextStyle}>Sign In</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate('SignIn')}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    textAlign: 'center',
+                    color: 'white',
+                    fontWeight: '700',
+                  }}>
+                  Log In
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </View>
@@ -221,7 +264,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.PRIMERY_COLOR,
   },
   container1: {
-    marginTop: vw(40),
+    marginTop: vw(25),
+    paddingVertical: 20,
     height: vh(70),
     backgroundColor: Colors.SECONDRY_COLOR,
     flex: 1,
@@ -285,6 +329,7 @@ const styles = StyleSheet.create({
     color: Colors.WHITE,
     fontSize: 16,
     fontWeight: '700',
+    textAlign: 'center',
   },
   inputContainer: {
     flexDirection: 'row',
@@ -298,5 +343,14 @@ const styles = StyleSheet.create({
   },
   icon: {
     padding: 10,
+  },
+  orLine: {
+    width: 65,
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginHorizontal: 5,
+    height: 1,
+    backgroundColor: 'white',
   },
 });

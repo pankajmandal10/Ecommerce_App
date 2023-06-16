@@ -25,6 +25,8 @@ import SearchField from './common/SearchField';
 import ChatWithCustomer from '../screens/chatfeature/ChatScreen';
 import SignIn_SingUp from '../screens/authStack/SignIn_SignUp';
 import SignIn from '../screens/authStack/SignIn';
+import OrderTrack from '../screens/OrderTrack';
+import MyOrder from '../screens/MyOrder';
 
 const Stack = createStackNavigator();
 const ExploreStack = createNativeStackNavigator<ExploreStackParams>();
@@ -169,6 +171,15 @@ export const AddedCartItemStack = (props: any) => {
         name="Order Successful"
         component={OrderSuccessfulScreen}
       /> */}
+      <Stack.Screen
+        options={({navigation, route}) => ({
+          header: props => (
+            <HeaderNavBar navigation={navigation} props={props} route={route} />
+          ),
+        })}
+        name="Order Successful"
+        component={OrderSuccessfulScreen}
+      />
     </CartItemStack.Navigator>
   );
 };
@@ -196,6 +207,24 @@ export const ProfileStacks = (props: any) => {
         })}
         name="Profile Details"
         component={ProfileScreen}
+      />
+      <Stack.Screen
+        name="My Order"
+        options={({navigation, route}) => ({
+          header: props => (
+            <HeaderNavBar navigation={navigation} props={props} route={route} />
+          ),
+        })}
+        component={MyOrder}
+      />
+      <Stack.Screen
+        name="Order Details"
+        options={({navigation, route}) => ({
+          header: props => (
+            <HeaderNavBar navigation={navigation} props={props} route={route} />
+          ),
+        })}
+        component={OrderTrack}
       />
       <ProfileStack.Screen
         options={{headerShown: false}}

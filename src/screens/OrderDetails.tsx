@@ -15,11 +15,17 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CustomeLoading from '../components/common/CustomeLoading';
 import {useAppDispatch, useAppSelector} from '../hokes';
-import {getAsyncItem} from '../services';
+import {currentDateTime, getAsyncItem, todayDate} from '../services';
 import {getLoggedUser, STATUSES, userUpdate} from '../store/redux/UserSlice';
 import Colors from '../theme/Colors';
 import Radio from '../components/common/RadioButton';
 import ErrorNetwork from '../components/common/ErrorNetwork';
+import MyModal from '../components/modal/MyModal';
+import {
+  checkoutOrderedItem,
+  orderedItemPost,
+} from '../store/redux/ProductSlice';
+import {StackActions} from '@react-navigation/core';
 
 interface OrderDetailsProps {
   navigation: any;
@@ -73,67 +79,67 @@ const OrderDetails = (props: OrderDetailsProps) => {
     return <Text>Something went wrong!</Text>;
   }
 
-  function onChangeHandler() {
-    // dispatch(userUpdate(id, body));
+  const handleClose = () => {
+    setVisible(false);
+  };
+
+  const renderDialogBox = () => {
     return (
-      <Modal
-        animationType="fade"
+      <MyModal
         visible={visible}
-        transparent
-        onRequestClose={() => {
-          setVisible(false);
-        }}>
-        <View style={styles.dialogBGStyle}>
-          <View style={styles.dialogStyle}>
-            <MaterialIcons
-              onPress={() => setVisible(false)}
-              style={{
-                position: 'absolute',
-                flex: 1,
-                alignSelf: 'flex-end',
-                top: 0,
-                padding: 7,
-              }}
-              name="cancel"
-              size={28}
-              color="tomato"
-            />
-            <Text style={styles.modalTextStyle}>Update Address</Text>
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#222"
-              onChangeText={address => {
-                setAddress(address);
-              }}
-              value={address}
-              placeholder="Enter address..."
-            />
-            <TouchableOpacity
-              onPress={async () => {
-                let data = {id: user._id, address: {address}};
-                address === ''
-                  ? alert('Enter the address')
-                  : await dispatch(userUpdate(data)).then(response => {
-                      setVisible(false);
-                      init();
-                    });
-              }}
-              style={{
-                top: 10,
-                padding: 10,
-                width: 100,
-                borderRadius: 3,
-                backgroundColor: Colors.SECONDRY_COLOR,
-              }}>
-              <Text style={{textAlign: 'center', color: Colors.WHITE}}>
-                Update
-              </Text>
-            </TouchableOpacity>
-          </View>
+        onClose={() => setVisible(false)}
+        animationType="fade">
+        {/* <View style={styles.dialogBGStyle}> */}
+        <View style={styles.dialogStyle}>
+          {/* <MaterialIcons
+            onPress={() => setVisible(false)}
+            style={{
+              position: 'absolute',
+              flex: 1,
+              alignSelf: 'flex-end',
+              top: 0,
+              padding: 7,
+            }}
+            name="cancel"
+            size={28}
+            color="tomato"
+          /> */}
+          <Text style={styles.modalTextStyle}>Update Address</Text>
+          <TextInput
+            style={styles.input}
+            placeholderTextColor="#222"
+            onChangeText={address => {
+              setAddress(address);
+            }}
+            value={address}
+            placeholder="Enter address..."
+          />
+          <TouchableOpacity
+            onPress={async () => {
+              let data = {id: user._id, address: {address}};
+              address === ''
+                ? alert('Enter the address')
+                : await dispatch(userUpdate(data)).then(response => {
+                    setVisible(false);
+                    init();
+                  });
+            }}
+            style={{
+              top: 10,
+              padding: 10,
+              width: 100,
+              borderRadius: 3,
+              backgroundColor: Colors.SECONDRY_COLOR,
+            }}>
+            <Text style={{textAlign: 'center', color: Colors.WHITE}}>
+              Update
+            </Text>
+          </TouchableOpacity>
         </View>
-      </Modal>
+        {/* </View> */}
+      </MyModal>
     );
-  }
+  };
 
   const handleSelect = option => {
     setSelectedOption(option);
@@ -228,7 +234,7 @@ const OrderDetails = (props: OrderDetailsProps) => {
                   style={{
                     paddingHorizontal: 10,
                   }}>
-                  <Text style={styles.textStyle1}>10 March,2023 9:30am </Text>
+                  <Text style={styles.textStyle1}>{currentDateTime}</Text>
                 </View>
               </View>
             </View>
@@ -340,7 +346,6 @@ const OrderDetails = (props: OrderDetailsProps) => {
             </View>
           </View>
         </ScrollView>
-        {onChangeHandler()}
         <View
           style={{
             position: 'absolute',
@@ -376,10 +381,16 @@ const OrderDetails = (props: OrderDetailsProps) => {
             </Text>
           </View>
           <TouchableOpacity
-            onPress={() => {
-              selectedOption == null
-                ? alert('Please Select the Payment Method')
-                : props.navigation.navigate('Order Successful');
+            onPress={async () => {
+              if (selectedOption == null) {
+                alert('Please Select the Payment Method');
+              } else {
+                await dispatch(orderedItemPost(cart));
+                await dispatch(checkoutOrderedItem());
+                props.navigation.dispatch(
+                  StackActions.replace('Order Successful'),
+                );
+              }
             }}
             style={{
               padding: 7,
@@ -402,6 +413,7 @@ const OrderDetails = (props: OrderDetailsProps) => {
           </TouchableOpacity>
         </View>
       </>
+      {renderDialogBox()}
     </ErrorNetwork>
   );
 };
@@ -424,11 +436,14 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    padding: 10,
+    marginHorizontal: 30,
     borderRadius: 7,
     borderColor: Colors.PRIMERY_COLOR,
     color: '#222',
-    width: '95%',
+    width: 200,
+    margin: 5,
+    paddingHorizontal: 5,
+    justifyContent: 'flex-start',
   },
   imageStyle: {
     width: vw(18),
@@ -470,12 +485,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
-    elevation: 3,
+    // padding: 34,
+    // elevation: 3,
   },
   modalTextStyle: {
-    fontSize: 17,
+    fontSize: 18,
     color: '#000',
+    fontWeight: '600',
     padding: 15,
   },
   radioStyle: {
@@ -483,5 +499,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  closeButton: {
+    backgroundColor: Colors.PRIMERY_COLOR,
+    padding: 10,
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginTop: 20,
+    color: 'white',
+    width: 90,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

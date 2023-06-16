@@ -1,9 +1,16 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import Colors from '../theme/Colors';
 import {vw, vh} from 'react-native-css-vh-vw';
+import {fetchCartItems} from '../store/redux/addCartSlice';
+import {useAppDispatch} from '../hokes';
 
 const OrderSuccessfulScreen = props => {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    console.warn('in succ');
+    dispatch(fetchCartItems());
+  });
   return (
     <View style={styles.container}>
       <Image source={require('../images/success.png')} style={styles.icon} />

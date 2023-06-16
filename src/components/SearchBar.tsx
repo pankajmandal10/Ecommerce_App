@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   View,
   TextInput,
@@ -21,6 +21,7 @@ interface SearchBarProps {
 
 const SearchBar = (props: SearchBarProps) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [listHeight, setListHeight] = useState(0);
   const dispatch = useAppDispatch();
   const {data: products, status}: any = useAppSelector(state => state.product);
 
@@ -51,6 +52,8 @@ const SearchBar = (props: SearchBarProps) => {
     );
   };
 
+  const flatListRef = useRef(null);
+
   return (
     <View>
       <View style={styles.container}>
@@ -59,7 +62,9 @@ const SearchBar = (props: SearchBarProps) => {
           placeholderTextColor="gray"
           style={styles.input}
           value={searchTerm}
-          onChangeText={text => setSearchTerm(text)}
+          onChangeText={text => {
+            setSearchTerm(text);
+          }}
         />
         <TouchableOpacity
           onPress={() => onItemPress(searchTerm)}
@@ -87,10 +92,15 @@ const SearchBar = (props: SearchBarProps) => {
           backgroundColor: 'white',
           position: 'absolute',
           marginVertical: 72,
+          height: listHeight > 285 ? 285 : listHeight,
         }}>
         <FlatList
+          ref={flatListRef}
           data={filteredData}
-          renderItem={renderItem}
+          renderItem={({item, index}) => renderItem({item, index})}
+          onContentSizeChange={(contentWidth, contentHeight) => {
+            setListHeight(contentHeight);
+          }}
           keyExtractor={item => item.key}
         />
       </View>
@@ -115,6 +125,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
     marginLeft: 10,
+    color: '#36454F',
   },
   icon: {
     marginRight: 10,

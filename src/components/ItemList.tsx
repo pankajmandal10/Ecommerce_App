@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   View,
@@ -6,22 +6,14 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
-  ScrollView,
-  Animated,
 } from 'react-native';
 import Colors from '../theme/Colors';
 import Rating from './common/Rating';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {vw, vh} from 'react-native-css-vh-vw';
-import {useAppDispatch, useAppSelector} from '../hokes';
-import {
-  fetchProducts,
-  fetchSearchProducts,
-  STATUSES,
-} from '../store/redux/ProductSlice';
+import {useAppDispatch} from '../hokes';
 import HomeMainCard from './HomeMainCard';
 import {addDetailsProduct} from '../store/redux/CartSlice';
-import CustomeLoading from './common/CustomeLoading';
 
 const ItenList = (props: any) => {
   const [liked, setLiked] = useState(false);
@@ -30,7 +22,6 @@ const ItenList = (props: any) => {
   const [selectedCategory, setSelectedCategory]: any = useState(
     props.categoriesdData[0],
   );
-
   const handleCategoryPress = category => {
     let data = category;
     let dataSource = props.categoriesdData;
@@ -44,6 +35,7 @@ const ItenList = (props: any) => {
     setSelectedCategory(category);
   };
 
+  // console.warn('selectedCategory', selectedCategory);
   const addFunc = (item: any) => {
     dispatch(addDetailsProduct(item));
     props.navigation.navigate('Details');
@@ -53,6 +45,7 @@ const ItenList = (props: any) => {
     <View style={styles.contener}>
       <View style={styles.item}>
         <TouchableOpacity
+          key={index}
           style={{
             flex: 1,
             justifyContent: 'center',
@@ -108,12 +101,12 @@ const ItenList = (props: any) => {
     return (
       <View
         style={{
-          borderRadius: 40,
-          height: 90,
+          borderRadius: 35,
+          // height: 83,
           paddingVertical: 15,
           backgroundColor: Colors.SECONDRY_COLOR,
           padding: 10,
-          borderWidth: 2,
+          borderWidth: 1,
           marginVertical: 6,
           marginHorizontal: 7,
           // flex: 1,
@@ -156,12 +149,13 @@ const ItenList = (props: any) => {
       <View>
         <FlatList
           data={selectedCategory.items}
+          showsVerticalScrollIndicator={false}
           keyExtractor={(item, index) => String(index)}
           renderItem={renderItem}
           numColumns={2}
           columnWrapperStyle={styles.columnWrapper}
           ListHeaderComponent={UpperComponent}
-          style={{marginBottom: 105}}
+          style={{marginBottom: 98}}
         />
       </View>
     </View>

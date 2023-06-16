@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   Text,
   View,
@@ -19,10 +19,11 @@ interface SearchFieldProps {
 
 const SearchField = (props: SearchFieldProps) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [listHeight, setListHeight] = useState(0);
   const dispatch = useAppDispatch();
   const {data: products, status}: any = useAppSelector(state => state.product);
   // const SearchedItems: any = useAppSelector(state => state.product);
-
+  const flatListRef = useRef(null);
   const filteredData = searchTerm
     ? products.filter(item =>
         item.title.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -85,13 +86,10 @@ const SearchField = (props: SearchFieldProps) => {
             onPress={() => props.navigation.goBack()}
           />
           <TextInput
-            style={{
-              alignSelf: 'flex-start',
-              paddingHorizontal: 10,
-              fontSize: 16,
-            }}
-            value={searchTerm}
             placeholder="Search products..."
+            placeholderTextColor="gray"
+            style={styles.input}
+            value={searchTerm}
             onChangeText={text => setSearchTerm(text)}
           />
         </View>
@@ -106,10 +104,15 @@ const SearchField = (props: SearchFieldProps) => {
           flex: 1,
           alignSelf: 'center',
           justifyContent: 'center',
+          height: listHeight > 285 ? 285 : listHeight,
         }}>
         <FlatList
+          ref={flatListRef}
           data={filteredData}
           renderItem={renderItem}
+          onContentSizeChange={(contentWidth, contentHeight) => {
+            setListHeight(contentHeight);
+          }}
           keyExtractor={item => item.key}
         />
       </View>
@@ -126,5 +129,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: 'black',
     flex: 1,
+  },
+  input: {
+    flex: 1,
+    height: 50,
+    marginLeft: 10,
+    color: '#36454F',
   },
 });

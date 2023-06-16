@@ -97,7 +97,7 @@ const SignIn = (props: SignInProps) => {
             fontWeight: 'bold',
             color: 'white',
           }}>
-          SignIn
+          Sign In
         </Text>
         <View style={styles.container1}>
           <ScrollView>
@@ -108,6 +108,7 @@ const SignIn = (props: SignInProps) => {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
+                selectionColor="white"
                 placeholderTextColor="#EECDAB"
                 onChangeText={email => {
                   // Remove spaces and commas from input text
@@ -121,6 +122,7 @@ const SignIn = (props: SignInProps) => {
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
+                selectionColor="white"
                 placeholderTextColor="#EECDAB"
                 placeholder="Password..."
                 autoCapitalize="none"
@@ -151,40 +153,78 @@ const SignIn = (props: SignInProps) => {
 
             <View
               style={{
-                flexDirection: 'row',
-                alignSelf: 'center',
+                flex: 1,
+                flexDirection: 'column',
                 justifyContent: 'space-between',
-                width: '100%',
-                marginVertical: 20,
-                flexWrap: 'wrap',
-                paddingHorizontal: 25,
               }}>
-              <TouchableOpacity
+              <View
                 style={{
-                  ...styles.touchableButton,
-                  backgroundColor: Colors.WHITE,
-                }}
-                onPress={() => {
-                  handleSignIn();
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                }}>
+                <TouchableOpacity
+                  style={{
+                    ...styles.touchableButton,
+                    backgroundColor: Colors.WHITE,
+                  }}
+                  onPress={() => {
+                    handleSignIn();
+                  }}>
+                  <Text
+                    style={{
+                      ...styles.touchbleTextStyle,
+                      color: Colors.BLACK,
+                    }}>
+                    SIGN IN
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                  marginVertical: 20,
+                }}>
+                <View style={styles.orLine}></View>
+                <Text style={styles.touchbleTextStyle}>OR</Text>
+                <View style={styles.orLine}></View>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'flex-end',
                 }}>
                 <Text
                   style={{
-                    ...styles.touchbleTextStyle,
-                    color: Colors.BLACK,
+                    fontSize: 16,
+                    textAlign: 'center',
+                    color: '#36454F',
+                    paddingHorizontal: 7,
                   }}>
-                  Sign In
+                  Register now using
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.touchableButton}
-                onPress={() =>
-                  // Navigate to SignIn screen with callback function name
-                  props.navigation.navigate('SignUp', {
-                    callback: 'performSignUp',
-                  })
-                }>
-                <Text style={styles.touchbleTextStyle}>Sign Up</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    // Navigate to SignIn screen with callback function name
+                    props.navigation.navigate('SignUp', {
+                      callback: 'performSignUp',
+                    })
+                  }>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      textAlign: 'center',
+                      color: 'white',
+                      fontWeight: '700',
+                    }}>
+                    Email
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </ScrollView>
         </View>
@@ -269,7 +309,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
     fontSize: 16,
     color: Colors.WHITE,
-    marginLeft: 55,
+    marginLeft: 25,
   },
   buttonSignIn: {
     width: 150,
@@ -374,5 +414,14 @@ const styles = StyleSheet.create({
   },
   icon: {
     padding: 10,
+  },
+  orLine: {
+    width: 65,
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginHorizontal: 5,
+    height: 1,
+    backgroundColor: 'white',
   },
 });

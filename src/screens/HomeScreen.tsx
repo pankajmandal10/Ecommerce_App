@@ -1,22 +1,13 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, ScrollView, Animated} from 'react-native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import Colors from '../theme/Colors';
-import {RootStackParams} from '../route/Routing';
 import SearchBar from '../components/SearchBar';
 import HeaderTabs from '../components/HeaderTabs';
-import HomeMainCard from '../components/HomeMainCard';
-import Categories from '../components/Categories';
 import ItenList from '../components/ItemList';
 import ErrorNetwork from '../components/common/ErrorNetwork';
 import {useAppDispatch, useAppSelector} from '../hokes';
-import {
-  STATUSES,
-  fetchProducts,
-  fetchSearchProducts,
-} from '../store/redux/ProductSlice';
+import {STATUSES, fetchSearchProducts} from '../store/redux/ProductSlice';
 import CustomeLoading from '../components/common/CustomeLoading';
-import {getAsyncItem, setAsyncItem} from '../services';
 import ChatIcon from './chatfeature/ChatIcon';
 
 // type Props = NativeStackScreenProps<RootStackParams, 'Home'>;
@@ -25,14 +16,13 @@ const HomeScreen = ({navigation}: any) => {
   const dispatch = useAppDispatch();
   const [categoriesdDataSource, setCategoriesdDataSource]: any = useState([]);
   const [loadingStatus, setLoadingStatus] = useState(false);
-
   const products: any = useAppSelector(state => state.product);
   useEffect(() => {
     init();
-  }, [dispatch]);
+  }, []);
 
   const init = async () => {
-    await dispatch(fetchProducts());
+    // await dispatch(fetchProducts());
     await dispatch(fetchSearchProducts(''));
   };
 

@@ -134,6 +134,7 @@ const SearchedItems = (props: SearchedItemsProps) => {
           keyExtractor={(item, index) => String(index)}
           renderItem={renderItem}
           numColumns={2}
+          style={{marginBottom: 65}}
         />
       </View>
       {/* </View> */}
