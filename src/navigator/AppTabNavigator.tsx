@@ -6,6 +6,7 @@ import {
   AddedCartItemStack,
   ExploreScreenStack,
   ProfileStacks,
+  WishListStacks,
 } from '../components/HeaderScreenOption';
 import {RootStack} from '../route/Routing';
 import {TabIcon} from '../components/common/TabBarIcon';
@@ -155,6 +156,26 @@ const MainScreen = () => {
           tabBarInactiveTintColor: 'gray',
         })}
       />
+
+      <RootStack.Screen
+        name="WishList"
+        component={WishListStacks}
+        options={({route}) => ({
+          tabBarIcon: ({focused, color, size}) => {
+            return (
+              <TabIcon
+                route={route}
+                focused={focused}
+                size={size}
+                color={color}
+              />
+            );
+          },
+          tabBarActiveTintColor: 'red',
+          tabBarInactiveTintColor: 'gray',
+        })}
+      />
+
       <RootStack.Screen
         name="Profile"
         component={ProfileStacks}

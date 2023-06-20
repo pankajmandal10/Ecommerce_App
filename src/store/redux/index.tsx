@@ -3,12 +3,14 @@ import productReducer from './ProductSlice';
 import {cartReducer} from './CartSlice';
 import userSlice from './UserSlice';
 import addCartSlice from './addCartSlice';
+import UserWishList from './UserWishListSlice';
 export const store = configureStore({
   reducer: {
     user: userSlice,
     cart: cartReducer,
     addcart: addCartSlice,
     product: productReducer,
+    UserWishList: UserWishList,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

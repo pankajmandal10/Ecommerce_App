@@ -11,17 +11,31 @@ import Colors from '../theme/Colors';
 import Rating from './common/Rating';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {vw, vh} from 'react-native-css-vh-vw';
-import {useAppDispatch} from '../hokes';
+import {useAppDispatch, useAppSelector} from '../hokes';
 import HomeMainCard from './HomeMainCard';
 import {addDetailsProduct} from '../store/redux/CartSlice';
+import {
+  STATUSES,
+  addToWishListItem,
+  fetchUserWishListItem,
+} from '../store/redux/UserWishListSlice';
+import {CustomeItemLoading} from './common/CustomeLoading';
+import Toast from './common/toast';
+import {ToastType} from './common/toast/common';
 
 const ItenList = (props: any) => {
-  const [liked, setLiked] = useState(false);
-  const [counter, setCounter] = useState(-2);
+  const [clicked, setClicked] = useState(-1);
+  const [showBottomToast, setShowBottomToast] = useState(false);
+  const [showBottomToast1, setShowBottomToast1] = useState(false);
   const dispatch = useAppDispatch();
   const [selectedCategory, setSelectedCategory]: any = useState(
     props.categoriesdData[0],
   );
+
+  const {wishListItem: wishListItem, status}: any = useAppSelector(
+    state => state.UserWishList,
+  );
+
   const handleCategoryPress = category => {
     let data = category;
     let dataSource = props.categoriesdData;
@@ -35,15 +49,32 @@ const ItenList = (props: any) => {
     setSelectedCategory(category);
   };
 
-  // console.warn('selectedCategory', selectedCategory);
+  // console.warn('props.categoriesdData', props.categoriesdData);
   const addFunc = (item: any) => {
     dispatch(addDetailsProduct(item));
     props.navigation.navigate('Details');
   };
 
-  const renderItem = ({item, index}) => (
-    <View style={styles.contener}>
-      <View style={styles.item}>
+  const wishListHandler = async item => {
+    await dispatch(addToWishListItem(item));
+    setShowBottomToast(false);
+    setShowBottomToast1(false);
+    await dispatch(fetchUserWishListItem());
+  };
+
+  const loadingAddToCart = ({item, index}) => {
+    if (status === STATUSES.LOADING && index === clicked) {
+      return (
+        <View
+          style={{
+            width: '25%',
+            justifyContent: 'center',
+          }}>
+          <CustomeItemLoading />
+        </View>
+      );
+    } else {
+      return (
         <TouchableOpacity
           key={index}
           style={{
@@ -56,20 +87,37 @@ const ItenList = (props: any) => {
             // backgroundColor: 'black',
           }}
           onPress={() => {
-            setLiked(!liked);
-            setCounter(index);
+            setClicked(index);
+            let data = item;
+            data.wishListStatus = data.wishListStatus ? false : true;
+            if (!item.wishListStatus) {
+              setShowBottomToast1(true);
+            } else {
+              setShowBottomToast(true);
+            }
+            wishListHandler(data);
+            // setLiked(!liked);
+            // setCounter(index);
           }}>
           <AntDesign
             style={{alignSelf: 'center'}}
-            name={liked && index == counter ? 'heart' : 'hearto'}
+            name={item.wishListStatus ? 'heart' : 'hearto'}
             size={24}
-            color={liked && index == counter ? 'red' : 'white'}
-            onPress={() => {
-              setLiked(!liked);
-              setCounter(index);
-            }}
+            color={item.wishListStatus ? 'red' : 'white'}
+            // onPress={() => {
+            //   setLiked(!liked);
+            //   setCounter(index);
+            // }}
           />
         </TouchableOpacity>
+      );
+    }
+  };
+
+  const renderItem = ({item, index}) => (
+    <View style={styles.contener}>
+      <View style={styles.item}>
+        {loadingAddToCart({item, index})}
         <TouchableOpacity onPress={() => addFunc(item)}>
           <Image style={styles.imageStyle} source={{uri: item.image}} />
           <View
@@ -158,6 +206,16 @@ const ItenList = (props: any) => {
           style={{marginBottom: 98}}
         />
       </View>
+      <Toast
+        showToast={showBottomToast}
+        type={ToastType.Bottom}
+        message="PRODUCT ADD TO MY WISH LIST."
+      />
+      <Toast
+        showToast={showBottomToast1}
+        type={ToastType.Bottom}
+        message="PRODUCT DELETED TO MY WISH LIST."
+      />
     </View>
   );
 };

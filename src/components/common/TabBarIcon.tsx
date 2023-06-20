@@ -12,11 +12,9 @@ export const TabIcon = ({route, focused, size, color}: any) => {
     case 'Profile':
       iconName = focused ? 'person' : 'person';
       break;
+    case 'WishList':
+      iconName = focused ? 'heart-sharp' : 'heart-outline';
+      break;
   }
-  //   if (route.name === 'Home') {
-  //     iconName = focused ? 'home' : 'home-outline';
-  //   } else if (route.name === 'Settings') {
-  //     iconName = focused ? 'ios-list' : 'ios-list-outline';
-  //   }
   return <Ionicons name={iconName} size={size} color={color} />;
 };

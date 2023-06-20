@@ -124,9 +124,6 @@ export const fetchSearchedItems = createAsyncThunk(
   'productItems/fetch',
   async productName => {
     const spliceTitle = productName.slice(0, 3);
-    console.warn(
-      `https://cackestoreapi.onrender.com/api/productSearch?name=${spliceTitle}`,
-    );
     const res = await fetch(
       `https://cackestoreapi.onrender.com/api/productSearch?name=${spliceTitle}`,
     );
@@ -209,9 +206,6 @@ export const checkoutOrderedItem = createAsyncThunk(
   'checkoutOrderedItem/fetch',
   async () => {
     const userId = await getAsyncItem('userId');
-    console.warn(
-      `https://cackestoreapi.onrender.com/api/v1/checkoutOrdered/${userId}`,
-    );
     axios
       .delete(
         `https://cackestoreapi.onrender.com/api/v1/checkoutOrdered/${userId}`,

@@ -8,6 +8,7 @@ export type RootStackParams = {
   // Cart: NavigatorScreenParams<RestaurantsStackParams>;
   Cart: NavigatorScreenParams<CartItemStackPrams>;
   Profile: undefined;
+  WishList: undefined;
   Restaurant: {
     name: string;
   };
@@ -38,6 +39,10 @@ export type AuthStackPrams = {
   Signup: {
     name: string;
   };
+};
+
+export type WishListStackPrams = {
+  WishList: undefined;
 };
 
 export type ProfileStackPrams = {

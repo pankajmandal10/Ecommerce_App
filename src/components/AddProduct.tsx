@@ -25,7 +25,10 @@ import {
   fetchCartItems,
 } from '../store/redux/addCartSlice';
 import {getAsyncItem, setAsyncItem} from '../services';
-import {CustomeDotIndicatorLoading} from './common/CustomeLoading';
+import CustomeLoading, {
+  CustomeDotIndicatorLoading,
+  CustomeItemLoading,
+} from './common/CustomeLoading';
 import MyModal from './modal/MyModal';
 import {StackActions} from '@react-navigation/core';
 
@@ -43,6 +46,7 @@ const AddProduct = (props: AddProductProps): JSX.Element => {
   const [showBottomToast, setShowBottomToast] = useState(false);
   const [showButtonType, setshowButtonType] = useState(false);
   const [userId, setUserId] = useState('');
+  const [clicked, setClicked] = useState(-1);
   // const [userCradential, setUserCradential] = useState();
 
   const {product: product, status}: any = useAppSelector(state => state.cart);
@@ -68,12 +72,14 @@ const AddProduct = (props: AddProductProps): JSX.Element => {
 
   const onBuyNow = async () => {
     const data = {product: product, userId: userId};
+    setClicked(2);
     await dispatch(addToCartPost(data));
     props.navigation.navigate('My Cart');
   };
 
   const onPressShowBottomToast = (): void => {
     const data = {product: product, userId: userId};
+    setClicked(1);
     setShowBottomToast(true);
     setshowButtonType(true);
     setCart(!cart);
@@ -84,16 +90,19 @@ const AddProduct = (props: AddProductProps): JSX.Element => {
     }, 3000);
   };
 
-  return (
-    <>
-      <View style={styles.container1}>
-        <Toast
-          showToast={showBottomToast}
-          type={ToastType.Bottom}
-          message="Product Added to Cart."
-        />
-      </View>
-      <View style={styles.container}>
+  const loadingAddToCart = () => {
+    if (data.status === STATUSES.LOADING && clicked === 1) {
+      return (
+        <View
+          style={{
+            width: '25%',
+            justifyContent: 'center',
+          }}>
+          <CustomeItemLoading />
+        </View>
+      );
+    } else {
+      return (
         <TouchableOpacity
           onPress={!showButtonType ? onPressShowBottomToast : handleAdd}
           style={{
@@ -117,14 +126,23 @@ const AddProduct = (props: AddProductProps): JSX.Element => {
             {showButtonType ? 'GO TO CART' : 'ADD TO CART'}
           </Text>
         </TouchableOpacity>
+      );
+    }
+  };
 
+  const renderByNow = () => {
+    if (data.status === STATUSES.LOADING && clicked === 2) {
+      return (
         <View
           style={{
-            width: 1,
-            height: 60,
-            columnGap: 1,
-            backgroundColor: 'white',
-          }}></View>
+            width: '25%',
+            justifyContent: 'center',
+          }}>
+          <CustomeItemLoading />
+        </View>
+      );
+    } else {
+      return (
         <TouchableOpacity
           onPress={() => {
             onBuyNow();
@@ -138,23 +156,45 @@ const AddProduct = (props: AddProductProps): JSX.Element => {
           }}>
           <AntDesign
             style={{marginRight: 15}}
-            name={liked && 0 == counter ? 'heart' : 'hearto'}
+            name="hearto"
             size={24}
-            color={liked && 0 == counter ? '#F50B5C' : 'white'}
+            color="white"
             onPress={() => {
               onBuyNow();
-              setLiked(!liked);
-              setCounter(0);
             }}
           />
           <Text
             style={{
               ...styles.TouchableTextStyle,
-              color: liked && 0 == counter ? '#F50B5C' : 'white',
+              color: 'white',
             }}>
             BUY NOW
           </Text>
         </TouchableOpacity>
+      );
+    }
+  };
+
+  return (
+    <>
+      <View style={styles.container1}>
+        <Toast
+          showToast={showBottomToast}
+          type={ToastType.Bottom}
+          message="Product Added to Cart."
+        />
+      </View>
+      <View style={styles.container}>
+        {loadingAddToCart()}
+
+        <View
+          style={{
+            width: 1,
+            height: 60,
+            columnGap: 1,
+            backgroundColor: 'white',
+          }}></View>
+        {renderByNow()}
       </View>
     </>
   );

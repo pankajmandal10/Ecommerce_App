@@ -1,16 +1,29 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useState} from 'react';
-import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Share,
+} from 'react-native';
 import Rating from '../components/common/Rating';
 import {ExploreStackParams} from '../route/Routing';
 import Colors from '../theme/Colors';
 import AddProduct from '../components/AddProduct';
 import {vh, vw} from 'react-native-expo-viewport-units';
-import {useAppSelector} from '../hokes';
+import {useAppDispatch, useAppSelector} from '../hokes';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ErrorNetwork from '../components/common/ErrorNetwork';
 import Button from '../components/button/Button';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Toast from '../components/common/toast';
+import {ToastType} from '../components/common/toast/common';
+import {
+  addToWishListItem,
+  fetchUserWishListItem,
+} from '../store/redux/UserWishListSlice';
 
 type Props = NativeStackScreenProps<ExploreStackParams, 'Details'>;
 
@@ -25,8 +38,11 @@ const ProductDetailScreen = ({route, navigation}: ProductDetailScreenProps) => {
   const [checkStatus, setCheckStatus] = useState(false);
   const [liked, setLiked] = useState(false);
   const [counter, setCounter] = useState(-1);
+  const [showBottomToast, setShowBottomToast] = useState(false);
+  const [showBottomToast1, setShowBottomToast1] = useState(false);
   const {product: product, status}: any = useAppSelector(state => state.cart);
   const data: any = product;
+  const dispatch = useAppDispatch();
   const [otherCate, setOtherCate] = useState(product.price);
   const onPress = async (id: number) => {
     setColorId(id);
@@ -56,6 +72,13 @@ const ProductDetailScreen = ({route, navigation}: ProductDetailScreenProps) => {
     {id: 2, title: 'Cheesy Fries', pries: 160},
     {id: 3, title: 'Boneless Fries', pries: 170},
   ];
+
+  const shareProduct = () => {
+    Share.share({
+      message: 'Check out this amazing product!', // The message to be shared
+      url: 'https://cackestoreapi.onrender.com', // The URL to be shared (optional)
+    });
+  };
 
   // for Cake
   const renderOptionButton = (category: Object) => {
@@ -217,6 +240,13 @@ const ProductDetailScreen = ({route, navigation}: ProductDetailScreenProps) => {
     );
   };
 
+  const wishListHandler = async item => {
+    await dispatch(addToWishListItem(item));
+    setShowBottomToast(false);
+    setShowBottomToast1(false);
+    await dispatch(fetchUserWishListItem());
+  };
+
   return (
     <ErrorNetwork>
       <View style={styles.container}>
@@ -225,11 +255,21 @@ const ProductDetailScreen = ({route, navigation}: ProductDetailScreenProps) => {
             style={{
               position: 'absolute',
               flex: 1,
-              padding: 12,
+              // margin: 20,
               alignSelf: 'flex-end',
+              // backgroundColor: 'red',
             }}>
             <TouchableOpacity
+              style={{marginRight: 10, marginTop: 10}}
               onPress={() => {
+                let item = data;
+                data.wishListStatus = data.wishListStatus ? false : true;
+                if (!item.wishListStatus) {
+                  setShowBottomToast1(true);
+                } else {
+                  setShowBottomToast(true);
+                }
+                wishListHandler(item);
                 setLiked(!liked);
                 setCounter(0);
               }}>
@@ -241,18 +281,24 @@ const ProductDetailScreen = ({route, navigation}: ProductDetailScreenProps) => {
                 }
                 size={34}
                 color={liked && 0 == counter ? '#F50B5C' : 'white'}
-                onPress={() => {
-                  setLiked(!liked);
-                  setCounter(0);
-                }}
+                // onPress={() => {
+                //   setLiked(!liked);
+                //   setCounter(0);
+                // }}
               />
             </TouchableOpacity>
-            <Ionicons
-              style={{paddingVertical: 10}}
-              name="md-arrow-redo-circle-sharp"
-              size={34}
-              color="white"
-            />
+            <TouchableOpacity
+              // style={{backgroundColor: 'yellow'}}
+              onPress={() => {
+                shareProduct();
+              }}>
+              <Ionicons
+                style={{paddingVertical: 10}}
+                name="md-arrow-redo-circle-sharp"
+                size={34}
+                color="white"
+              />
+            </TouchableOpacity>
           </View>
           <Image style={styles.imageStyle} source={{uri: data.image}} />
           <Rating Size={vw(5)} />
@@ -290,6 +336,16 @@ const ProductDetailScreen = ({route, navigation}: ProductDetailScreenProps) => {
         {renderOptionSelectionOfProduct()}
         <AddProduct navigation={navigation} route={route} />
       </View>
+      <Toast
+        showToast={showBottomToast}
+        type={ToastType.Bottom}
+        message="PRODUCT ADD TO MY WISH LIST."
+      />
+      <Toast
+        showToast={showBottomToast1}
+        type={ToastType.Bottom}
+        message="PRODUCT DELETED TO MY WISH LIST."
+      />
     </ErrorNetwork>
   );
 };

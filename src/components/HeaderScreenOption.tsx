@@ -7,6 +7,7 @@ import {
   CartItemStackPrams,
   ExploreStackParams,
   ProfileStackPrams,
+  WishListStackPrams,
 } from '../route/Routing';
 import ProductDetailScreen from '../screens/ProductDetailScreen';
 import AddProduct from './AddProduct';
@@ -27,11 +28,13 @@ import SignIn_SingUp from '../screens/authStack/SignIn_SignUp';
 import SignIn from '../screens/authStack/SignIn';
 import OrderTrack from '../screens/OrderTrack';
 import MyOrder from '../screens/MyOrder';
+import WishList from '../screens/WishListScreen';
 
 const Stack = createStackNavigator();
 const ExploreStack = createNativeStackNavigator<ExploreStackParams>();
 const ProfileStack = createNativeStackNavigator<ProfileStackPrams>();
 const CartItemStack = createNativeStackNavigator<CartItemStackPrams>();
+const WishListStack = createNativeStackNavigator<WishListStackPrams>();
 
 export const ExploreScreenStack = (props: any) => {
   return (
@@ -243,5 +246,42 @@ export const ProfileStacks = (props: any) => {
         component={SignUp}
       />
     </ProfileStack.Navigator>
+  );
+};
+
+export const WishListStacks = (props: any) => {
+  return (
+    <WishListStack.Navigator
+      initialRouteName="WishList"
+      screenOptions={{
+        title: props.route.name,
+        headerStyle: {
+          backgroundColor: Colors.PRIMERY_COLOR,
+        },
+        headerTitleAlign: 'center',
+        headerTintColor: Colors.WHITE,
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}>
+      <Stack.Screen
+        options={({navigation, route}) => ({
+          header: props => (
+            <HeaderNavBar navigation={navigation} props={props} route={route} />
+          ),
+        })}
+        name="Wish List"
+        component={WishList}
+      />
+      {/* <Stack.Screen
+        options={({navigation, route}) => ({
+          header: props => (
+            <HeaderNavBar navigation={navigation} props={props} route={route} />
+          ),
+        })}
+        name="Homes"
+        component={HomeScreen}
+      /> */}
+    </WishListStack.Navigator>
   );
 };

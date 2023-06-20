@@ -6,7 +6,11 @@ import HeaderTabs from '../components/HeaderTabs';
 import ItenList from '../components/ItemList';
 import ErrorNetwork from '../components/common/ErrorNetwork';
 import {useAppDispatch, useAppSelector} from '../hokes';
-import {STATUSES, fetchSearchProducts} from '../store/redux/ProductSlice';
+import {
+  STATUSES,
+  fetchProducts,
+  fetchSearchProducts,
+} from '../store/redux/ProductSlice';
 import CustomeLoading from '../components/common/CustomeLoading';
 import ChatIcon from './chatfeature/ChatIcon';
 
@@ -22,7 +26,7 @@ const HomeScreen = ({navigation}: any) => {
   }, []);
 
   const init = async () => {
-    // await dispatch(fetchProducts());
+    await dispatch(fetchProducts());
     await dispatch(fetchSearchProducts(''));
   };
 

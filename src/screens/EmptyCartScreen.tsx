@@ -49,6 +49,47 @@ const EmptyCartScreen = (props: EmptyCartScreenProps) => {
   );
 };
 
+export const WishListEmpty = (props: EmptyCartScreenProps) => {
+  return (
+    <View style={{marginTop: 20}}>
+      <Text style={{fontSize: 22, textAlign: 'center', color: 'red'}}>
+        You Wishlist is Empty!
+      </Text>
+      <Text style={{fontSize: 18, textAlign: 'center', color: 'black'}}>
+        Explore More and shortlist some items!
+      </Text>
+      <Image
+        style={{
+          width: 190,
+          height: 190,
+          alignSelf: 'center',
+          resizeMode: 'center',
+        }}
+        source={require('../images/EmptyImg.png')}
+      />
+      <Text
+        style={{
+          fontSize: 27,
+          textAlign: 'center',
+          color: '#A00942',
+        }}>
+        YOUR WISH LIST CART IS EMPTY
+      </Text>
+      <TouchableOpacity
+        style={{
+          top: 40,
+          width: 150,
+          borderRadius: 3,
+          backgroundColor: Colors.SECONDRY_COLOR,
+          alignSelf: 'center',
+        }}
+        onPress={() => props.navigation.navigate('Homes')}>
+        <Text style={styles.item}>Start Shopping</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 export default EmptyCartScreen;
 
 const styles = StyleSheet.create({
