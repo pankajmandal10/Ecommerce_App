@@ -15,11 +15,22 @@
 
 <h3>Home Screens. </h3>
 <div style="display: flex;">
+<!-- CAKE CATEGORY -->
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347781/cakeliciouse_UI/home_screen_oynz3s.jpg" width="130" height="210">
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347780/cakeliciouse_UI/cake_details_lgpbhm.jpg" width="130" height="210">
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347780/cakeliciouse_UI/cake_details1_wt8ajv.jpg" width="130" height="210">
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347782/cakeliciouse_UI/search_product_i9ocnj.jpg" width="130" height="210">
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347783/cakeliciouse_UI/searched_products_gqhkek.jpg" width="130" height="210">
+<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347782/cakeliciouse_UI/notification_alert_yzuogw.jpg" width="130" height="210">
+
+
+<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347781/cakeliciouse_UI/home_colddrink_ykx3u3.jpg" width="130" height="210"> 
+<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347780/cakeliciouse_UI/colddrink_details_lnumhg.jpg" width="130" height="210">
+
+<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347782/cakeliciouse_UI/home_fries_zgi13b.jpg" width="130" height="210">
+<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347781/cakeliciouse_UI/colddrink_details1_t9ux0h.jpg" width="130" height="210">
+<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347781/cakeliciouse_UI/fries_details_aadtocart_sfviwr.jpg" width="130" height="210">
+
 </div>
 
 <h3>Chat with System. </h3>
