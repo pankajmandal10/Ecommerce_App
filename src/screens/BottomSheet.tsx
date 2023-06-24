@@ -1,161 +1,74 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import {
-  StyleSheet,
-  View,
-  useWindowDimensions,
-  TouchableWithoutFeedback,
-} from 'react-native';
-import React, {forwardRef, useImperativeHandle, useCallback} from 'react';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  useAnimatedGestureHandler,
-  interpolate,
-} from 'react-native-reanimated';
+import React, {useRef, ReactNode} from 'react';
+import {Modal, Animated, TouchableOpacity, StyleSheet} from 'react-native';
+import Colors from '../theme/Colors';
 import {PanGestureHandler} from 'react-native-gesture-handler';
-const BottomSheet = forwardRef(
-  ({activeHeight, children, backgroundColor, backDropColor}: any, ref) => {
-    const {height} = useWindowDimensions();
-    const newActiveHeight = height - activeHeight;
-    const topAnimation = useSharedValue(height);
+interface MyBottomSheetProps {
+  children: ReactNode;
+  isVisible: boolean;
+  setIsVisible: (visible: boolean) => void;
+}
 
-    const expand = useCallback(() => {
-      'worklet';
-      topAnimation.value = withSpring(newActiveHeight, {
-        damping: 100,
-        stiffness: 400,
-      });
-    }, []);
+const BottomSheet: React.FC<MyBottomSheetProps> = ({
+  children,
+  isVisible,
+  setIsVisible,
+}) => {
+  const animatedValue = useRef(new Animated.Value(0)).current;
 
-    const close = useCallback(() => {
-      'worklet';
-      topAnimation.value = withSpring(height, {
-        damping: 100,
-        stiffness: 400,
-      });
-    }, []);
-
-    useImperativeHandle(
-      ref,
-      () => ({
-        expand,
-        close,
-      }),
-      [expand, close],
-    );
-
-    const animationStyle = useAnimatedStyle(() => {
-      const top = topAnimation.value;
-      return {
-        top,
-      };
+  const handleModalClose = () => {
+    Animated.timing(animatedValue, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      setIsVisible(false);
     });
-    const backDropAnimation = useAnimatedStyle(() => {
-      const opacity = interpolate(
-        topAnimation.value,
-        [height, newActiveHeight],
-        [0, 0.5],
-      );
-      const display = opacity === 0 ? 'none' : 'flex';
-      return {
-        opacity,
-        display,
-      };
-    });
+  };
 
-    const gestureHandler = useAnimatedGestureHandler({
-      onStart: (_, ctx: any) => {
-        ctx.startY = topAnimation.value;
-      },
-      onActive: (event, ctx) => {
-        if (event.translationY < 0) {
-          topAnimation.value = withSpring(newActiveHeight, {
-            damping: 100,
-            stiffness: 400,
-          });
-        } else {
-          topAnimation.value = withSpring(ctx.startY + event.translationY, {
-            damping: 100,
-            stiffness: 400,
-          });
-        }
-      },
-      onEnd: _ => {
-        if (topAnimation.value > newActiveHeight + 50) {
-          topAnimation.value = withSpring(height, {
-            damping: 100,
-            stiffness: 400,
-          });
-        } else {
-          topAnimation.value = withSpring(newActiveHeight, {
-            damping: 100,
-            stiffness: 400,
-          });
-        }
-      },
-    });
+  const translateY = animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [400, 0],
+  });
 
-    return (
-      <>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            close();
-          }}>
+  React.useEffect(() => {
+    if (isVisible) {
+      Animated.timing(animatedValue, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [isVisible, animatedValue]);
+
+  return (
+    <Modal visible={isVisible} transparent animationType="none">
+      <TouchableOpacity
+        style={styles.modalOverlay}
+        activeOpacity={1}
+        onPress={handleModalClose}>
+        <PanGestureHandler>
           <Animated.View
-            style={[
-              styles.backDrop,
-              backDropAnimation,
-              {backgroundColor: backDropColor},
-            ]}
-          />
-        </TouchableWithoutFeedback>
-        <PanGestureHandler onGestureEvent={gestureHandler}>
-          <Animated.View
-            style={[
-              styles.container,
-              animationStyle,
-              {height: activeHeight, backgroundColor: backgroundColor},
-            ]}>
-            <View style={styles.lineContainer}>
-              <View style={styles.line} />
-            </View>
+            style={[styles.bottomSheet, {transform: [{translateY}]}]}>
             {children}
           </Animated.View>
         </PanGestureHandler>
-      </>
-    );
-  },
-);
-
-export default BottomSheet;
+      </TouchableOpacity>
+    </Modal>
+  );
+};
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 900,
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
   },
-  lineContainer: {
-    marginVertical: 10,
-    alignItems: 'center',
-  },
-  line: {
-    width: 50,
-    height: 4,
-    backgroundColor: 'black',
-    borderRadius: 20,
-  },
-  backDrop: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    display: 'none',
+  bottomSheet: {
+    backgroundColor: Colors.SECONDRY_COLOR,
+    padding: 30,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
   },
 });
+
+export default BottomSheet;

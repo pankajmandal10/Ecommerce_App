@@ -1,18 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Modal,
-} from 'react-native';
+import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {vh, vw} from 'react-native-expo-viewport-units';
 import {ScrollView, TextInput} from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import CustomeLoading from '../components/common/CustomeLoading';
 import {useAppDispatch, useAppSelector} from '../hokes';
 import {currentDateTime, getAsyncItem, todayDate} from '../services';
@@ -78,10 +70,6 @@ const OrderDetails = (props: OrderDetailsProps) => {
   if (responsestatus === STATUSES.ERROR) {
     return <Text>Something went wrong!</Text>;
   }
-
-  const handleClose = () => {
-    setVisible(false);
-  };
 
   const renderDialogBox = () => {
     return (

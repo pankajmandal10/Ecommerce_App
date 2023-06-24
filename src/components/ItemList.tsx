@@ -49,7 +49,6 @@ const ItenList = (props: any) => {
     setSelectedCategory(category);
   };
 
-  // console.warn('props.categoriesdData', props.categoriesdData);
   const addFunc = (item: any) => {
     dispatch(addDetailsProduct(item));
     props.navigation.navigate('Details');
@@ -84,7 +83,6 @@ const ItenList = (props: any) => {
             width: 30,
             marginHorizontal: 8,
             marginVertical: 2,
-            // backgroundColor: 'black',
           }}
           onPress={() => {
             setClicked(index);
@@ -96,18 +94,12 @@ const ItenList = (props: any) => {
               setShowBottomToast(true);
             }
             wishListHandler(data);
-            // setLiked(!liked);
-            // setCounter(index);
           }}>
           <AntDesign
             style={{alignSelf: 'center'}}
             name={item.wishListStatus ? 'heart' : 'hearto'}
             size={24}
             color={item.wishListStatus ? 'red' : 'white'}
-            // onPress={() => {
-            //   setLiked(!liked);
-            //   setCounter(index);
-            // }}
           />
         </TouchableOpacity>
       );

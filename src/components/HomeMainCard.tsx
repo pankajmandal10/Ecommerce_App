@@ -16,6 +16,7 @@ const data: Item[] = [
   {id: 1, title: 'Cake', image: require('../images/cake4.png')},
   {id: 2, title: 'Burger', image: require('../images/burger.png')},
   {id: 3, title: 'Fries', image: require('../images/fries.png')},
+  {id: 4, title: 'Sandwich', image: require('../images/sandwich.png')},
 ];
 
 const CarouselItem = ({item}) => {

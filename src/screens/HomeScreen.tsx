@@ -18,8 +18,6 @@ import ChatIcon from './chatfeature/ChatIcon';
 
 const HomeScreen = ({navigation}: any) => {
   const dispatch = useAppDispatch();
-  const [categoriesdDataSource, setCategoriesdDataSource]: any = useState([]);
-  const [loadingStatus, setLoadingStatus] = useState(false);
   const products: any = useAppSelector(state => state.product);
   useEffect(() => {
     init();
@@ -127,7 +125,6 @@ const HomeScreen = ({navigation}: any) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    // marginTop: 24,
   },
   restaurantCard: {
     backgroundColor: '#efefef',

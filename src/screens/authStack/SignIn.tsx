@@ -6,8 +6,9 @@ import {
   Image,
   TextInput,
   useWindowDimensions,
+  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Colors from '../../theme/Colors';
 import BottomSheet from '../BottomSheet';
 import {useAppDispatch, useAppSelector} from '../../hokes';
@@ -29,6 +30,7 @@ const SignIn = (props: SignInProps) => {
   const [password, setPassword] = useState('');
   const [forgotEmail, setForgotEmail] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const dispatch = useAppDispatch();
 
   // Retrieve the callback function name on the SignIn screen
@@ -147,7 +149,11 @@ const SignIn = (props: SignInProps) => {
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity onPress={() => pressHandler()}>
+            <TouchableOpacity
+              onPress={() =>
+                // pressHandler()
+                setIsVisible(true)
+              }>
               <Text style={styles.forgotPass}>Forgot Password?</Text>
             </TouchableOpacity>
 
@@ -230,18 +236,15 @@ const SignIn = (props: SignInProps) => {
         </View>
       </View>
       {/* Bottom sheet show on button call only */}
-      <BottomSheet
-        ref={bottomSheetRef}
-        activeHeight={height * 0.5}
-        backgroundColor={'#08A092'}
-        backDropColor={'black'}>
+      <BottomSheet isVisible={isVisible} setIsVisible={setIsVisible}>
         <View
           style={{
-            flex: 1,
             justifyContent: 'space-around',
           }}>
           <View style={styles.textContainer}>
-            <Text style={styles.text}>Enter Your Email</Text>
+            <Text style={{...styles.text, color: '#fff', fontSize: 18}}>
+              Reset Your Password
+            </Text>
             <View style={styles.inputContainer}>
               <TextInput
                 style={{...styles.input, width: '100%', alignSelf: 'center'}}
@@ -255,13 +258,12 @@ const SignIn = (props: SignInProps) => {
             </View>
             <TouchableOpacity
               style={{...styles.touchableButton, alignSelf: 'center'}}
-              onPress={() => props.navigation.navigate('SignUp')}>
-              <Text style={styles.touchbleTextStyle}>Submite</Text>
+              onPress={() => {
+                setIsVisible(false);
+                setForgotEmail('');
+              }}>
+              <Text style={styles.touchbleTextStyle}>Send</Text>
             </TouchableOpacity>
-          </View>
-
-          <View>
-            <View></View>
           </View>
         </View>
       </BottomSheet>
@@ -376,7 +378,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#000000',
-    fontSize: 16,
     textAlign: 'center',
   },
   textExample2: {
