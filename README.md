@@ -49,18 +49,18 @@
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347780/cakeliciouse_UI/chart_page1_ulz4dv.jpg" width="130" height="210">
 </div>
 
+<h3>Wishlist Screens. </h3>
+<div style="display: flex;">
+<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347781/cakeliciouse_UI/empty_wishlist_uro2tr.jpg" width="130" height="210">
+<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347783/cakeliciouse_UI/wishlist_gvvgdu.jpg" width="130" height="210">
+</div>
+
 <h3>Cart Screens. </h3>
 <div style="display: flex;">
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347782/cakeliciouse_UI/addtocart_oclffp.jpg" width="130" height="210">
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347781/cakeliciouse_UI/delevery_to_zis82n.jpg" width="130" height="210">
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347781/cakeliciouse_UI/delevery_to1_ldbczy.jpg" width="130" height="210">
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347782/cakeliciouse_UI/order_succ_xxha2h.jpg" width="130" height="210">
-</div>
-
-<h3>Wishlist Screens. </h3>
-<div style="display: flex;">
-<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347781/cakeliciouse_UI/empty_wishlist_uro2tr.jpg" width="130" height="210">
-<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347783/cakeliciouse_UI/wishlist_gvvgdu.jpg" width="130" height="210">
 </div>
 
 <h3>Payment/Checkout. </h3>
