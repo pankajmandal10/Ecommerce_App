@@ -43,12 +43,6 @@
 <!-- AND OTHER CATEGORY ARE NOT ADDED HERE. FOR MORE YOU CAN SEE IN APP-->
 </div>
 
-<h3>Chat with System. </h3>
-<div style="display: flex;">
-<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347780/cakeliciouse_UI/chart_page_kggjtq.jpg" width="130" height="210">
-<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347780/cakeliciouse_UI/chart_page1_ulz4dv.jpg" width="130" height="210">
-</div>
-
 <h3>Wishlist Screens. </h3>
 <div style="display: flex;">
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347781/cakeliciouse_UI/empty_wishlist_uro2tr.jpg" width="130" height="210">
@@ -67,6 +61,12 @@
 <div style="display: flex;">
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1692956089/Screenshot_20230825-145808_Cakelicious_1_koh7qb.jpg" width="130" height="210">
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1692956120/Screenshot_20230825-145852_Cakelicious_1_bq33ap.jpg" width="130" height="210">
+</div>
+
+<h3>Chat with System. </h3>
+<div style="display: flex;">
+<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347780/cakeliciouse_UI/chart_page_kggjtq.jpg" width="130" height="210">
+<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347780/cakeliciouse_UI/chart_page1_ulz4dv.jpg" width="130" height="210">
 </div>
 
 <h3>Profile Screens. </h3>
