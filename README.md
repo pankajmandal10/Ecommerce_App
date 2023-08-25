@@ -1,4 +1,4 @@
-# Ecommerce_App (Cakeliciouce)
+# Ecommerce_App (Cakelicious)
 
 <h3>Splash Screens. </h3>
 <div style="display: flex;">
