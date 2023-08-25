@@ -6,6 +6,13 @@
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347783/cakeliciouse_UI/splash2_dtxb1x.jpg" width="130" height="210">
 </div>
 
+<h3>Loading Skeleton</h3>
+<div style="display: flex;">
+<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1692955861/Screenshot_20230825-145701_Cakelicious_1_jz1rkf.jpg" width="130" height="210">
+<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347783/cakeliciouse_UI/singin_ulwe1c.jpg" width="130" height="210">
+<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1692956032/Screenshot_20230825-145728_Cakelicious_1_bosizo.jpg" width="130" height="210">
+</div>
+
 <h3>Auth Screens. </h3>
 <div style="display: flex;">
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347783/cakeliciouse_UI/singup_uq9hi8.jpg" width="130" height="210">
