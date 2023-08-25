@@ -63,6 +63,12 @@
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347783/cakeliciouse_UI/wishlist_gvvgdu.jpg" width="130" height="210">
 </div>
 
+<h3>Payment/Checkout. </h3>
+<div style="display: flex;">
+<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1692956089/Screenshot_20230825-145808_Cakelicious_1_koh7qb.jpg" width="130" height="210">
+<img src="https://res.cloudinary.com/daghzwcji/image/upload/v1692956120/Screenshot_20230825-145852_Cakelicious_1_bq33ap.jpg" width="130" height="210">
+</div>
+
 <h3>Profile Screens. </h3>
 <div style="display: flex;">
 <img src="https://res.cloudinary.com/daghzwcji/image/upload/v1687347783/cakeliciouse_UI/user_profile_cps6pj.jpg" width="130" height="210">
