@@ -18,13 +18,15 @@ import {
   orderedItemPost,
 } from '../store/redux/ProductSlice';
 import {StackActions} from '@react-navigation/core';
+import PaymentScreen from '../payment/PaymentScreen';
+import {LoadingMyOrderSkeleton} from '../components/common/SkeletonLoading/LoadingCartSkeleton';
 
 interface OrderDetailsProps {
   navigation: any;
 }
 const paymentMethodOptions = [
   'Other UPI Apps',
-  'Pay with Debit/Credit/ATM Cards',
+  'Pay With Debit/Credit/ATM Cards',
   'Net Banking',
   'EMI',
   'Cash on Delivery',
@@ -55,16 +57,7 @@ const OrderDetails = (props: OrderDetailsProps) => {
   );
 
   if (responsestatus === STATUSES.LOADING) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          alignContent: 'center',
-          alignSelf: 'center',
-        }}>
-        <CustomeLoading />
-      </View>
-    );
+    return <LoadingMyOrderSkeleton itemCount={4} />;
   }
 
   if (responsestatus === STATUSES.ERROR) {
@@ -130,7 +123,11 @@ const OrderDetails = (props: OrderDetailsProps) => {
   };
 
   const handleSelect = option => {
-    setSelectedOption(option);
+    if (option == 'Pay With Debit/Credit/ATM Cards') {
+      props.navigation.navigate('PaymentScreen');
+    } else {
+      setSelectedOption(option);
+    }
   };
 
   return (
@@ -226,7 +223,7 @@ const OrderDetails = (props: OrderDetailsProps) => {
                 </View>
               </View>
             </View>
-            <View style={styles.card}>
+            {/* <View style={styles.card}>
               <MaterialIcons name="payment" size={24} color="tomato" />
               <View
                 style={{
@@ -298,7 +295,7 @@ const OrderDetails = (props: OrderDetailsProps) => {
                   </View>
                 ) : null}
               </View>
-            </View>
+            </View> */}
             <View
               style={{
                 ...styles.card,
@@ -368,7 +365,7 @@ const OrderDetails = (props: OrderDetailsProps) => {
               Your order ({cart.length} items)
             </Text>
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={async () => {
               if (selectedOption == null) {
                 alert('Please Select the Payment Method');
@@ -398,7 +395,12 @@ const OrderDetails = (props: OrderDetailsProps) => {
               }}>
               PLACE ORDER
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <PaymentScreen
+            userDetails={user}
+            grandTotal={grand}
+            navigation={props.navigation}
+          />
         </View>
       </>
       {renderDialogBox()}

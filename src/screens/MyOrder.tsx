@@ -6,6 +6,7 @@ import Colors from '../theme/Colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CustomeLoading from '../components/common/CustomeLoading';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {LoadingMyOrderSkeleton} from '../components/common/SkeletonLoading/LoadingCartSkeleton';
 
 interface MyOrderProps {
   navigation: any;
@@ -25,16 +26,7 @@ const MyOrder = (props: MyOrderProps) => {
   }, [dispatch]);
 
   if (status === STATUSES.LOADING) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          alignContent: 'center',
-          alignSelf: 'center',
-        }}>
-        <CustomeLoading />
-      </View>
-    );
+    return <LoadingMyOrderSkeleton itemCount={products.length} />;
   }
 
   const renderOrderedItems = ({item, index}) => {

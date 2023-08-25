@@ -27,6 +27,7 @@ export type CartItemStackPrams = {
     name: string;
   };
   Orderdetails: undefined;
+  PaymentScreen: undefined;
   OrderDetails: {
     name: string;
   };

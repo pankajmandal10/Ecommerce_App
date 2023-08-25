@@ -20,6 +20,7 @@ import CustomeLoading, {
 } from '../components/common/CustomeLoading';
 import {addDetailsProduct} from '../store/redux/CartSlice';
 import {WishListEmpty} from './EmptyCartScreen';
+import {LoadingMyOrderSkeleton} from '../components/common/SkeletonLoading/LoadingCartSkeleton';
 
 interface WishListProps {
   navigation: any;
@@ -28,11 +29,15 @@ interface WishListProps {
 const WishList = (props: WishListProps) => {
   const dispatch = useAppDispatch();
   const [clicked, setClicked] = useState(-1);
+  const [pageLoaded, setPageLoaded] = useState(true);
   const {wishListItem: wishListItem, status}: any = useAppSelector(
     state => state.UserWishList,
   );
 
   useEffect(() => {
+    setTimeout(() => {
+      setPageLoaded(false);
+    }, 3000); // Adjust this delay to match your actual loading time
     init();
   }, []);
   const init = async () => {
@@ -43,6 +48,10 @@ const WishList = (props: WishListProps) => {
     await dispatch(addToWishListItem(item));
     init();
   };
+
+  if (pageLoaded) {
+    return <LoadingMyOrderSkeleton itemCount={wishListItem.length} />;
+  }
 
   const loadingAndRender = ({item, index}) => {
     if (status === STATUSES.LOADING && index === clicked) {

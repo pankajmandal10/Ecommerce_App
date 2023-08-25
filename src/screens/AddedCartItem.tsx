@@ -28,6 +28,7 @@ import ErrorNetwork from '../components/common/ErrorNetwork';
 import axios from 'axios';
 import {StackActions} from '@react-navigation/core';
 import MyModal from '../components/modal/MyModal';
+import {LoadingMyOrderSkeleton} from '../components/common/SkeletonLoading/LoadingCartSkeleton';
 
 interface AddProductProps {
   navigation: any;
@@ -38,6 +39,7 @@ const Cart = ({route, navigation}: AddProductProps) => {
   const [grand, setGrand] = useState(0);
   const [productId, setProductId] = useState('');
   const [visible, setVisible] = useState(false);
+  const [pageLoaded, setPageLoaded] = useState(true);
   const dispatch = useAppDispatch();
   const {
     cart: cart,
@@ -46,6 +48,12 @@ const Cart = ({route, navigation}: AddProductProps) => {
   }: any = useAppSelector(state => state.addcart);
 
   // const [cart, setCartData] = useState(cart);
+  useEffect(() => {
+    // Simulate loading delay
+    setTimeout(() => {
+      setPageLoaded(false);
+    }, 3000); // Adjust this delay to match your actual loading time
+  }, []);
 
   useEffect(() => {
     init();
@@ -62,6 +70,10 @@ const Cart = ({route, navigation}: AddProductProps) => {
       },
     );
   };
+
+  if (pageLoaded) {
+    return <LoadingMyOrderSkeleton itemCount={cart.length} />;
+  }
 
   const handleUpdatetItem = async (item: any, action: any) => {
     setProductId(item._id);

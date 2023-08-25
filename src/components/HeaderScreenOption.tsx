@@ -29,6 +29,7 @@ import SignIn from '../screens/authStack/SignIn';
 import OrderTrack from '../screens/OrderTrack';
 import MyOrder from '../screens/MyOrder';
 import WishList from '../screens/WishListScreen';
+import PaymentScreen from '../payment/PaymentScreen';
 
 const Stack = createStackNavigator();
 const ExploreStack = createNativeStackNavigator<ExploreStackParams>();
@@ -100,6 +101,15 @@ export const ExploreScreenStack = (props: any) => {
         })}
         name="Orderdetails"
         component={OrderDetails}
+      />
+      <CartItemStack.Screen
+        options={({navigation, route}) => ({
+          header: props => (
+            <HeaderNavBar navigation={navigation} props={props} route={route} />
+          ),
+        })}
+        name="PaymentScreen"
+        component={PaymentScreen}
       />
       <Stack.Screen
         options={({navigation, route}) => ({

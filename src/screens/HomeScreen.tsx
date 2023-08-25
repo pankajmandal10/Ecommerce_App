@@ -13,6 +13,7 @@ import {
 } from '../store/redux/ProductSlice';
 import CustomeLoading from '../components/common/CustomeLoading';
 import ChatIcon from './chatfeature/ChatIcon';
+import {LoadingCartSkeleton} from '../components/common/SkeletonLoading/LoadingCartSkeleton';
 
 // type Props = NativeStackScreenProps<RootStackParams, 'Home'>;
 
@@ -73,14 +74,15 @@ const HomeScreen = ({navigation}: any) => {
 
   if (products.status === STATUSES.LOADING) {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignContent: 'center',
-          alignSelf: 'center',
-        }}>
-        <CustomeLoading />
-      </View>
+      <LoadingCartSkeleton />
+      // <View
+      //   style={{
+      //     flex: 1,
+      //     alignContent: 'center',
+      //     alignSelf: 'center',
+      //   }}>
+      //   <CustomeLoading />
+      // </View>
     );
   }
 

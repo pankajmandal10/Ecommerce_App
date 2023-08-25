@@ -19,6 +19,8 @@ import Colors from '../theme/Colors';
 import ErrorNetwork from '../components/common/ErrorNetwork';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MyModal from '../components/modal/MyModal';
+import {LoadingProfileSkeleton} from '../components/common/SkeletonLoading/LoadingCartSkeleton';
+// import {LoadingProfileSkeleton} from '../components/common/SkeletonLoading/LoadingCartSkeleton';
 
 interface ProfileScreenProps {
   navigation: any;
@@ -43,16 +45,7 @@ const ProfileScreen = (props: ProfileScreenProps) => {
   const {user: user, status}: any = useAppSelector(state => state.user);
 
   if (status === STATUSES.LOADING || loading === true) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          alignContent: 'center',
-          alignSelf: 'center',
-        }}>
-        <CustomeLoading />
-      </View>
-    );
+    return <LoadingProfileSkeleton itemCount={2} />;
   }
 
   if (status === STATUSES.ERROR) {
